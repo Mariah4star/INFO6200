@@ -5,6 +5,9 @@ from tkinter import messagebox
 
 import math
 
+# This script includes both a command-line calculator and an GUI calculator extension.
+
+# GUI Calculator
 #class for Calculator Application
 class CalculatorApp:
     def __init__(self, root):
@@ -77,23 +80,91 @@ class CalculatorApp:
             messagebox.showerror("Error", "Invalid Input")
             self.expression = ""
             self.input_text.set("")     
+
+#command-line calculator function
+def command_line_calculator():
+    """
+    Command-line calculator that prompts for first number, operation, and second number.
+    Handles non-numeric input and division by zero gracefully.
+    Allows user to continue or exit after each calculation.
+    """
+    print("\nWelcome to the Command-Line Calculator!")
+    print("=" * 50)
     
-    #create a CLI interface for the calculator  
-    def cli_interface(self):
-        print("Welcome to the CLI Calculator!")
-        print("Type 'exit' to quit.")
+    while True:
+        # Get first number
         while True:
-            user_input = input("Enter expression: ")
-            if user_input.lower() == 'exit':
-                print("Exiting the calculator. Goodbye!")
-                break
             try:
-                result = eval(user_input)
-                print("Result:", result)
-            except Exception as e:
-                print("Error: Invalid Input")
+                first_number = float(input("Enter the first number: "))
+                break
+            except ValueError:
+                print("Error: Please enter a valid number.")
+        
+        # Get operation
+        while True:
+            operation = input("Enter an operation (+, -, *, /): ")
+            if operation in ['+', '-', '*', '/']:
+                break
+            else:
+                print("Error: Please enter a valid operation (+, -, *, /).")
+        
+        # Get second number
+        while True:
+            try:
+                second_number = float(input("Enter the second number: "))
+                break
+            except ValueError:
+                print("Error: Please enter a valid number.")
+        
+        # Perform calculation
+        try:
+            if operation == '+':
+                result = first_number + second_number
+            elif operation == '-':
+                result = first_number - second_number
+            elif operation == '*':
+                result = first_number * second_number
+            elif operation == '/':
+                if second_number == 0:
+                    print("\nError: Cannot divide by zero. Please try again.")
+                    print("=" * 50)
+                    continue
+                result = first_number / second_number
+            
+            # Display result
+            print("=" * 50)
+            print(f"Result: {first_number} {operation} {second_number} = {result}")
+            print("=" * 50)
+        except Exception as e:
+            print(f"\nError: An unexpected error occurred: {e}")
+            print("=" * 50)
+        
+        # Ask user if they want to continue
+        while True:
+            continue_choice = input("\nDo you want to perform another calculation? (yes/no): ").lower()
+            if continue_choice in ['yes', 'y']:
+                print("\n" + "=" * 50)
+                break
+            elif continue_choice in ['no', 'n']:
+                print("\nThank you for using the calculator. Goodbye!")
+                print("=" * 50)
+                return
+            else:
+                print("Error: Please enter 'yes' or 'no'.")
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = CalculatorApp(root)
-    root.mainloop()     
+    print("\nCalculator Application")
+    print("=" * 50)
+    choice = input("Choose calculator mode:\n1. Command-Line Calculator\n2. GUI Calculator\nEnter 1 or 2: ")
+    
+    if choice == '1':
+        command_line_calculator()
+    elif choice == '2':
+        root = tk.Tk()
+        app = CalculatorApp(root)
+        root.mainloop()
+    else:
+        print("Invalid choice. Defaulting to GUI Calculator...")
+        root = tk.Tk()
+        app = CalculatorApp(root)
+        root.mainloop()
