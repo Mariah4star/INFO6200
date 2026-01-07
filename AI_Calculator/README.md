@@ -53,3 +53,6 @@ AI collaboration helped me fix:
 1. Fix a functional bug, enabling proper calculation chaining.
 2. Solve UI/UX issues, ensuring all buttons are accessible.
 3. Meet layout constraints, making the calculator fully visible and user-friendly.
+
+## Note: 
+The command-line calculator fulfills all assignment requirements; the included GUI version is an additional extension for extra functionality
