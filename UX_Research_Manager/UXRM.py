@@ -362,9 +362,14 @@ class UXResearchManager:
         if not self.confirm_action("Generate AI Summary"):
             return
         self.view_all_insights()
+        
+        # Check if there are any insights after view_all_insights
+        if not self.data_store.get_all_insights():
+            return
+        
         while True:
             try:
-                insight_id = int(input("Enter insight ID to summarize: ").strip())
+                insight_id = int(input("\nEnter insight ID to summarize: ").strip())
                 insight = self.data_store.get_insight(insight_id)
                 if not insight:
                     print("[ERROR] Insight not found.")
