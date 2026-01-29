@@ -17,7 +17,6 @@ try:
 except ImportError:
     REQUESTS_AVAILABLE = False
 
-
 # In-memory storage
 class DataStore:
     """Manages in-memory storage for insights and personas."""
@@ -293,6 +292,7 @@ class UXResearchManager:
     def view_all_insights(self):
         """View all research insights."""
         insights = self.data_store.get_all_insights()
+        print(f"[DEBUG] Found {len(insights)} insights in storage")
         if not insights:
             print("\n[INFO] No insights created yet.")
             if input("Would you like to create one? (y/n): ").strip().lower() == 'y':
@@ -301,6 +301,8 @@ class UXResearchManager:
         print("\n--- All Research Insights ---")
         for insight in insights:
             self.print_insight_summary(insight)
+        
+        input("\nPress Enter to continue...")
     
     def print_insight_summary(self, insight: Dict):
         """Print a summary of an insight."""
@@ -460,6 +462,8 @@ class UXResearchManager:
             desc = persona['description']
             print(f"   Description: {desc[:100]}..." if len(desc) > 100 else f"   Description: {desc}")
             print(f"   Created: {persona['timestamp']}")
+        
+        input("\nPress Enter to continue...")
     
     def view_specific_persona(self):
         """View details of a specific persona."""
