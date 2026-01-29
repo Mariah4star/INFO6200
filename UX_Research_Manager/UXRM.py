@@ -292,7 +292,6 @@ class UXResearchManager:
     def view_all_insights(self):
         """View all research insights."""
         insights = self.data_store.get_all_insights()
-        print(f"[DEBUG] Found {len(insights)} insights in storage")
         if not insights:
             print("\n[INFO] No insights created yet.")
             if input("Would you like to create one? (y/n): ").strip().lower() == 'y':
