@@ -9,7 +9,13 @@ research insights, create and manage personas, and use AI to summarize research 
 import os
 from datetime import datetime
 from typing import Dict, List, Optional
-import requests
+
+# Try to import requests - AI features will be disabled if not available
+try:
+    import requests
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
 
 
 # In-memory storage
@@ -120,6 +126,10 @@ class AIAssistant:
         Returns:
             AI-generated summary or warning message if API call fails
         """
+        if not REQUESTS_AVAILABLE:
+            return "[WARNING] AI summarization is unavailable.\n" \
+                   "Please install the 'requests' package: pip install requests"
+        
         if not self.api_key:
             return "[WARNING] No API key configured. Skipping AI summarization.\n" \
                    "Set OPENAI_API_KEY environment variable to enable this feature."
