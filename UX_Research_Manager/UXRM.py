@@ -259,7 +259,26 @@ class UXResearchManager:
             if pid_input.isdigit():
                 persona_id = int(pid_input)
         
-        journey_stage = input("Enter journey stage (or press Enter to skip): ").strip() or None
+        # Select journey stage
+        journey_stage = None
+        print("\nJourney Map Stages:")
+        print("  1. Awareness")
+        print("  2. Consideration")
+        print("  3. Decision")
+        print("  4. Retention")
+        print("  5. Advocacy")
+        stage_input = input("Select journey stage (1-5, or press Enter to skip): ").strip()
+        if stage_input:
+            stage_map = {
+                '1': 'Awareness',
+                '2': 'Consideration',
+                '3': 'Decision',
+                '4': 'Retention',
+                '5': 'Advocacy'
+            }
+            journey_stage = stage_map.get(stage_input)
+            if not journey_stage:
+                print("[WARNING] Invalid selection. Journey stage skipped.")
         
         ai_summary = None
         if input("Generate AI summary? (y/n): ").strip().lower() == 'y':
