@@ -437,9 +437,14 @@ class UXResearchManager:
         if not self.confirm_action("View Specific Persona"):
             return
         self.view_all_personas()
+        
+        # Check if there are any personas after view_all_personas
+        if not self.data_store.get_all_personas():
+            return
+        
         while True:
             try:
-                pid = int(input("Enter persona ID to view: ").strip())
+                pid = int(input("\nEnter persona ID to view: ").strip())
                 persona = self.data_store.get_persona(pid)
                 if not persona:
                     print("[ERROR] Persona not found.")
@@ -461,9 +466,14 @@ class UXResearchManager:
         if not self.confirm_action("Edit Persona"):
             return
         self.view_all_personas()
+        
+        # Check if there are any personas after view_all_personas
+        if not self.data_store.get_all_personas():
+            return
+        
         while True:
             try:
-                pid = int(input("Enter persona ID to edit: ").strip())
+                pid = int(input("\nEnter persona ID to edit: ").strip())
                 persona = self.data_store.get_persona(pid)
                 if not persona:
                     print("[ERROR] Persona not found.")
@@ -489,9 +499,14 @@ class UXResearchManager:
         if not self.confirm_action("Delete Persona"):
             return
         self.view_all_personas()
+        
+        # Check if there are any personas after view_all_personas
+        if not self.data_store.get_all_personas():
+            return
+        
         while True:
             try:
-                pid = int(input("Enter persona ID to delete: ").strip())
+                pid = int(input("\nEnter persona ID to delete: ").strip())
                 linked = [i for i in self.data_store.get_all_insights() if i['persona_id'] == pid]
                 if linked:
                     print(f"[WARNING] This persona has {len(linked)} linked insights. Deleting will unlink them.")
