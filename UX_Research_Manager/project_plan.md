@@ -1,5 +1,8 @@
 # UX Research Manager
 
+## General Instruction
+ I am providing a general overview of the UX Research Manager app and will break its development into smaller chunks to ensure functionality is solid. This submission includes the general overview followed by Chunk 1, which focuses on a working CLI prototype. In future iterations, I will include all previous information along with the next chunk.
+
 ## Project Overview 
 My app, UX Research Manager, is designed to help UX designers and researchers securely store, organize, and review user research insights. The app allows users to create, view, edit, and delete research findings, link insights to defined personas and stages in the user journey, and use AI to summarize research notes into clear insights. The goal is to provide a simple, easy-to-use platform that supports evidence-based design decisions and helps users manage their research in one place. 
 
@@ -49,3 +52,23 @@ My app, UX Research Manager, is designed to help UX designers and researchers se
 - Filtering or sorting insights by persona or journey map stage
 - AI-assisted editing to improve clarity and quality
 - AI-generated journey maps based on personas and insights
+
+# Chunking the Program – Breaking the development into smaller chunks
+
+## Chunk 1: CLI Application Prototype
+
+## Goal: Create a working CLI prototype of the UX Research Manager app.
+
+# Tasks:
+1. Initialize the program and activate the CLI menu.
+2. Set up a Python virtual environment for the project.
+3. Accept text-based user input for adding research insights.
+4. Connect to an LLM API for AI-assisted summarization of research notes.
+5. Allow creation of personas and link research insights to personas.
+6. Store insights and personas in in-memory storage (dictionary) for the duration of the session.
+7. Loop the CLI interaction so users can continue adding or viewing data until they choose to exit.
+
+# Core files to create:
+- UXRM.py (main application file)
+- requirements.txt (dependencies)
+- Initialize a Git repository and commit the prototype
