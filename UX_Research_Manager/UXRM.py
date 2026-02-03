@@ -1,7 +1,7 @@
 """
 UX Research Manager - CLI Prototype (Chunk 1)
 
-This is a command-line interface prototype for managing UX research insights 
+This is a commandline interface prototype for managing UX research insights 
 and personas. It provides functionality to create, view, edit, and delete 
 research insights, create and manage personas, and use AI to summarize research notes.
 """
