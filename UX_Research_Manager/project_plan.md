@@ -57,7 +57,8 @@ My app, UX Research Manager, is designed to help UX designers and researchers se
 
 ## Chunk 1: CLI Application Prototype
 
-## Goal: Create a working CLI prototype of the UX Research Manager app.
+## Goal: 
+Create a working CLI prototype of the UX Research Manager app.
 
 # Tasks:
 1. Initialize the program and activate the CLI menu.

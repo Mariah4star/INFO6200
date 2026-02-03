@@ -17,6 +17,13 @@ try:
 except ImportError:
     REQUESTS_AVAILABLE = False
 
+# Try to import Mistral AI
+try:
+    from mistralai import Mistral
+    MISTRAL_AVAILABLE = True
+except ImportError:
+    MISTRAL_AVAILABLE = False
+
 # In-memory storage
 class DataStore:
     """Manages in-memory storage for insights and personas."""
@@ -114,6 +121,7 @@ class AIAssistant:
         self.api_key = api_key or os.getenv('OPENAI_API_KEY')
         self.api_endpoint = "https://api.openai.com/v1/chat/completions"
         self.model = "gpt-3.5-turbo"
+        self.mistral_api_key = os.getenv("MISTRAL_API_KEY", "")
     
     def summarize_research(self, research_notes: str) -> str:
         """
@@ -165,6 +173,46 @@ class AIAssistant:
             return f"[WARNING] API Error: {str(e)}"
         except (KeyError, ValueError) as e:
             return f"[WARNING] Error parsing API response: {str(e)}"
+    
+    def summarize_with_mistral(self, research_notes: str) -> str:
+        """
+        Use Mistral AI to summarize research notes.
+        
+        Args:
+            research_notes: The raw research notes to summarize
+            
+        Returns:
+            AI-generated summary or warning message if API call fails
+        """
+        if not MISTRAL_AVAILABLE:
+            return "[WARNING] Mistral AI is unavailable.\n" \
+                   "Please install the 'mistralai' package: pip install mistralai"
+        
+        if not self.mistral_api_key:
+            return "[WARNING] No Mistral API key configured. Skipping AI summarization.\n" \
+                   "Set MISTRAL_API_KEY environment variable to enable this feature."
+        
+        try:
+            with Mistral(api_key=self.mistral_api_key) as mistral:
+                res = mistral.chat.complete(
+                    model="mistral-small-latest",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "You are a UX research assistant. Summarize research notes into "
+                                       "clear, actionable insights for UX designers. Be concise and focus "
+                                       "on key findings and implications."
+                        },
+                        {
+                            "role": "user",
+                            "content": f"Please summarize the following research notes:\n\n{research_notes}"
+                        }
+                    ],
+                    stream=False
+                )
+                return res.choices[0].message.content
+        except Exception as e:
+            return f"[WARNING] Mistral API Error: {str(e)}"
 
 
 class UXResearchManager:
