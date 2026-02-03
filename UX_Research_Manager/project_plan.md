@@ -73,3 +73,18 @@ Create a working CLI prototype of the UX Research Manager app.
 - UXRM.py (main application file)
 - requirements.txt (dependencies)
 - Initialize a Git repository and commit the prototype
+
+## Chunk 2: Refactoring for structured data
+
+# Goal: 
+Design and implement a data model for the UX Research Manager app. Refactor the existing CLI program to handle data in a more structured way. I want the research insights and personas to be represented as Python dictionaries and managed within lists. Keep this structured data in a file so it can be accessed across sessions.
+
+# Tasks: 
+1. Modify the existing Python script so each research insight and persona is represented as a single Python dictionary with keys matching the fields defined in the project data model.
+2. Store all dictionaries in master lists for insights and personas, and update the program logic to iterate over these lists when displaying data.
+3. Save the structured data to a file so it can be loaded in future sessions and updated after each session.
+4. Make sure that the CLI behavior and user experience remain unchanged from Chunk 1.
+
+# Files to create:
+- A new directory for stored data files
+- A data file (.JSON file) for persisting research insights and personas
