@@ -10,13 +10,6 @@ import os
 from datetime import datetime
 from typing import Dict, List, Optional
 
-# Try to import requests - AI features will be disabled if not available
-try:
-    import requests
-    REQUESTS_AVAILABLE = True
-except ImportError:
-    REQUESTS_AVAILABLE = False
-
 # Try to import Mistral AI
 try:
     from mistralai import Mistral
@@ -110,73 +103,15 @@ class DataStore:
 class AIAssistant:
     """Handles AI-assisted summarization using an LLM API."""
     
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self):
         """
         Initialize AI Assistant.
-        
-        Args:
-            api_key: API key for the LLM service (OpenAI by default).
-                    If not provided, will attempt to load from environment.
         """
-        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
-        self.api_endpoint = "https://api.openai.com/v1/chat/completions"
-        self.model = "gpt-3.5-turbo"
         self.mistral_api_key = os.getenv("MISTRAL_API_KEY", "")
     
     def summarize_research(self, research_notes: str) -> str:
         """
-        Use AI to summarize research notes into clear insights.
-        
-        Args:
-            research_notes: The raw research notes to summarize
-            
-        Returns:
-            AI-generated summary or warning message if API call fails
-        """
-        if not REQUESTS_AVAILABLE:
-            return "[WARNING] AI summarization is unavailable.\n" \
-                   "Please install the 'requests' package: pip install requests"
-        
-        if not self.api_key:
-            return "[WARNING] No API key configured. Skipping AI summarization.\n" \
-                   "Set OPENAI_API_KEY environment variable to enable this feature."
-        try:
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
-            }
-            payload = {
-                "model": self.model,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are a UX research assistant. Summarize research notes into "
-                                   "clear, actionable insights for UX designers. Be concise and focus "
-                                   "on key findings and implications."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"Please summarize the following research notes:\n\n{research_notes}"
-                    }
-                ],
-                "temperature": 0.7,
-                "max_tokens": 300
-            }
-            response = requests.post(self.api_endpoint, json=payload, headers=headers, timeout=10)
-            if response.status_code == 200:
-                return response.json()['choices'][0]['message']['content']
-            else:
-                return f"[WARNING] API Error (Status {response.status_code}): Unable to generate summary"
-        except requests.exceptions.Timeout:
-            return "[WARNING] API request timed out. Unable to generate summary."
-        except requests.exceptions.RequestException as e:
-            return f"[WARNING] API Error: {str(e)}"
-        except (KeyError, ValueError) as e:
-            return f"[WARNING] Error parsing API response: {str(e)}"
-    
-    def summarize_with_mistral(self, research_notes: str) -> str:
-        """
-        Use Mistral AI to summarize research notes.
+        Use Mistral AI to summarize research notes into clear insights.
         
         Args:
             research_notes: The raw research notes to summarize
