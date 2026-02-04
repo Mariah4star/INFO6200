@@ -2,3 +2,4 @@ venv/
 *.env
 .venv/
 _pycache__/
+UXRM.cpython-314._pycache
