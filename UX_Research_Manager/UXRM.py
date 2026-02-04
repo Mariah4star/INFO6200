@@ -1,9 +1,7 @@
 """
-UX Research Manager - CLI Prototype (Chunk 2)
-
+UX Research Manager - CLI Prototype (Web-Ready)
 This is a CLI application with persistent data storage for managing UX research 
-insights and personas. It provides functionality to create, view, edit, and delete 
-research insights, create and manage personas, and use AI to summarize research notes.
+insights and personas. It can optionally summarize research notes using an AI API.
 """
 
 import os
@@ -11,68 +9,52 @@ import json
 from datetime import datetime
 from typing import Dict, List, Optional
 from pathlib import Path
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Try to import Mistral AI
-try:
-    from mistralai import Mistral
-    MISTRAL_AVAILABLE = True
-except ImportError:
-    MISTRAL_AVAILABLE = False
+import requests
 
 # Data file paths
 DATA_DIR = Path(__file__).parent / "data"
 DATA_FILE = DATA_DIR / "research_data.json"
 
-# Persistent data storage
+
+# ------------------ Persistent Data ------------------ #
 class DataStore:
     """Manages persistent storage for insights and personas."""
-    
+
     def __init__(self):
         self.insights: List[Dict] = []
         self.personas: List[Dict] = []
         self.next_insight_id = 1
         self.next_persona_id = 1
         self.load_from_file()
-    
+
     def load_from_file(self) -> None:
         """Load insights and personas from JSON file."""
         if not DATA_FILE.exists():
             return
-        
         try:
             with open(DATA_FILE, 'r') as f:
                 data = json.load(f)
                 self.insights = data.get('insights', [])
                 self.personas = data.get('personas', [])
-                
-                # Recalculate next IDs based on existing data
                 if self.insights:
                     self.next_insight_id = max(i['id'] for i in self.insights) + 1
                 if self.personas:
                     self.next_persona_id = max(p['id'] for p in self.personas) + 1
         except Exception as e:
             print(f"[WARNING] Error loading data file: {e}")
-    
+
     def save_to_file(self) -> None:
         """Save insights and personas to JSON file."""
         try:
             DATA_DIR.mkdir(parents=True, exist_ok=True)
-            data = {
-                'insights': self.insights,
-                'personas': self.personas
-            }
             with open(DATA_FILE, 'w') as f:
-                json.dump(data, f, indent=2)
+                json.dump({'insights': self.insights, 'personas': self.personas}, f, indent=2)
         except Exception as e:
             print(f"[WARNING] Error saving data file: {e}")
-    
-    def add_insight(self, title: str, description: str, persona_id: Optional[int] = None, 
-                   journey_stage: Optional[str] = None, ai_summary: Optional[str] = None) -> int:
-        """Add a new research insight."""
+
+    # ------------------ Insight Methods ------------------ #
+    def add_insight(self, title: str, description: str, persona_id: Optional[int] = None,
+                    journey_stage: Optional[str] = None, ai_summary: Optional[str] = None) -> int:
         insight_id = self.next_insight_id
         self.insights.append({
             'id': insight_id,
@@ -86,38 +68,31 @@ class DataStore:
         self.next_insight_id += 1
         self.save_to_file()
         return insight_id
-    
+
     def get_insight(self, insight_id: int) -> Optional[Dict]:
-        """Retrieve a specific insight."""
-        for insight in self.insights:
-            if insight['id'] == insight_id:
-                return insight
-        return None
-    
+        return next((i for i in self.insights if i['id'] == insight_id), None)
+
     def get_all_insights(self) -> List[Dict]:
-        """Retrieve all insights."""
         return self.insights
-    
+
     def update_insight(self, insight_id: int, **kwargs) -> bool:
-        """Update an insight."""
-        for insight in self.insights:
-            if insight['id'] == insight_id:
-                insight.update(kwargs)
-                self.save_to_file()
-                return True
+        insight = self.get_insight(insight_id)
+        if insight:
+            insight.update(kwargs)
+            self.save_to_file()
+            return True
         return False
-    
+
     def delete_insight(self, insight_id: int) -> bool:
-        """Delete an insight."""
         for i, insight in enumerate(self.insights):
             if insight['id'] == insight_id:
                 self.insights.pop(i)
                 self.save_to_file()
                 return True
         return False
-    
+
+    # ------------------ Persona Methods ------------------ #
     def add_persona(self, name: str, description: str) -> int:
-        """Add a new persona."""
         persona_id = self.next_persona_id
         self.personas.append({
             'id': persona_id,
@@ -128,29 +103,22 @@ class DataStore:
         self.next_persona_id += 1
         self.save_to_file()
         return persona_id
-    
+
     def get_persona(self, persona_id: int) -> Optional[Dict]:
-        """Retrieve a specific persona."""
-        for persona in self.personas:
-            if persona['id'] == persona_id:
-                return persona
-        return None
-    
+        return next((p for p in self.personas if p['id'] == persona_id), None)
+
     def get_all_personas(self) -> List[Dict]:
-        """Retrieve all personas."""
         return self.personas
-    
+
     def update_persona(self, persona_id: int, **kwargs) -> bool:
-        """Update a persona."""
-        for persona in self.personas:
-            if persona['id'] == persona_id:
-                persona.update(kwargs)
-                self.save_to_file()
-                return True
+        persona = self.get_persona(persona_id)
+        if persona:
+            persona.update(kwargs)
+            self.save_to_file()
+            return True
         return False
-    
+
     def delete_persona(self, persona_id: int) -> bool:
-        """Delete a persona."""
         for i, persona in enumerate(self.personas):
             if persona['id'] == persona_id:
                 self.personas.pop(i)
@@ -159,98 +127,62 @@ class DataStore:
         return False
 
 
+# ------------------ AI Assistant ------------------ #
 class AIAssistant:
-    """Handles AI-assisted summarization using an LLM API."""
-    
+    """Handles AI-assisted summarization using a REST API."""
+
     def __init__(self):
-        """
-        Initialize AI Assistant.
-        """
-        self.mistral_api_key = os.getenv("MISTRAL_API_KEY", "")
-    
+        self.api_key = os.getenv("MISTRAL_API_KEY", "")
+        self.api_url = "https://api.mistral.ai/v1/chat/completions"  # replace with actual API URL
+
     def summarize_research(self, research_notes: str) -> str:
-        """
-        Use Mistral AI to summarize research notes into clear insights.
-        
-        Args:
-            research_notes: The raw research notes to summarize
-            
-        Returns:
-            AI-generated summary or warning message if API call fails
-        """
-        if not MISTRAL_AVAILABLE:
-            return "[WARNING] Mistral AI is unavailable.\n" \
-                   "Please install the 'mistralai' package: pip install mistralai"
-        
-        if not self.mistral_api_key:
-            return "[WARNING] No Mistral API key configured. Skipping AI summarization.\n" \
-                   "Set MISTRAL_API_KEY environment variable to enable this feature."
-        
+        """Summarize research notes via API or return mock summary if API is unavailable."""
+        if not self.api_key:
+            return "[MOCK SUMMARY] No API key provided. Here's a placeholder summary."
+
         try:
-            with Mistral(api_key=self.mistral_api_key) as mistral:
-                res = mistral.chat.complete(
-                    model="mistral-small-latest",
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": "You are a UX research assistant. Summarize research notes into "
-                                       "clear, actionable insights for UX designers. Be concise and focus "
-                                       "on key findings and implications."
-                        },
-                        {
-                            "role": "user",
-                            "content": f"Please summarize the following research notes:\n\n{research_notes}"
-                        }
-                    ],
-                    stream=False
-                )
-                return res.choices[0].message.content
+            response = requests.post(
+                self.api_url,
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json={
+                    "model": "mistral-small-latest",
+                    "messages": [
+                        {"role": "system", "content": "You are a UX research assistant."},
+                        {"role": "user", "content": research_notes}
+                    ]
+                }
+            )
+            response.raise_for_status()
+            data = response.json()
+            return data["choices"][0]["message"]["content"]
         except Exception as e:
-            return f"[WARNING] Mistral API Error: {str(e)}"
+            return f"[WARNING] API error: {str(e)}"
 
 
+# ------------------ CLI Application ------------------ #
 class UXResearchManager:
-    """Main CLI application for UX Research Manager."""
-    
+
     def __init__(self):
-        """Initialize the application."""
         self.data_store = DataStore()
         self.ai_assistant = AIAssistant()
-    
+
+    # ---------- CLI Helpers ---------- #
     def prompt_return_or_retry(self, menu_type="main") -> bool:
-        """Prompt the user to retry or return to menu on invalid input."""
         while True:
-            print("\nWhat would you like to do?")
-            print("  1. Try again")
-            if menu_type == "persona":
-                print("  2. Return to Persona Menu")
-            else:
-                print("  2. Return to Main Menu")
+            print("\n1. Try again\n2. Return to menu")
             choice = input("Select: ").strip()
-            if choice == '1':
-                return True
-            elif choice == '2':
-                return False
-            else:
-                print("[ERROR] Invalid selection. Please enter 1 or 2.")
-    
+            if choice == '1': return True
+            if choice == '2': return False
+            print("[ERROR] Invalid selection.")
+
     def confirm_action(self, action_name: str) -> bool:
-        """Confirm user wants to proceed with an action."""
         print(f"\n[INFO] You selected: {action_name}")
-        while True:
-            response = input("Press Enter to continue or type 'back' to return to menu: ").strip().lower()
-            if response == '':
-                return True
-            elif response == 'back':
-                print("[INFO] Returning to menu...\n")
-                return False
-            else:
-                print("[ERROR] Invalid input. Press Enter to continue or type 'back'.")
-    
+        response = input("Press Enter to continue or type 'back' to cancel: ").strip().lower()
+        return response == ''
+
     def display_menu(self):
-        """Display the main menu."""
         print("\n" + "="*50)
-        print("  UX RESEARCH MANAGER - CLI Prototype")
+        print("  UX RESEARCH MANAGER - CLI")
         print("="*50)
         print("1. Create Research Insight")
         print("2. View All Insights")
@@ -261,9 +193,8 @@ class UXResearchManager:
         print("7. Manage Personas")
         print("8. Exit")
         print("-"*50)
-    
+
     def display_persona_menu(self):
-        """Display the persona management menu."""
         print("\n" + "-"*50)
         print("  PERSONA MANAGEMENT")
         print("-"*50)
@@ -274,196 +205,62 @@ class UXResearchManager:
         print("5. Delete Persona")
         print("6. Back to Main Menu")
         print("-"*50)
-    
-    # ------------------ Insights ------------------ #
+
+    # ---------- Insights ---------- #
     def create_insight(self):
-        """Create a new research insight."""
-        if not self.confirm_action("Create Research Insight"):
-            return
+        if not self.confirm_action("Create Research Insight"): return
         title = input("Enter insight title: ").strip()
-        if not title:
-            print("[ERROR] Title cannot be empty.")
-            return
-        description = input("Enter research description/notes: ").strip()
-        if not description:
-            print("[ERROR] Description cannot be empty.")
-            return
-        
-        # Select persona
+        if not title: return print("[ERROR] Title cannot be empty.")
+        description = input("Enter research notes: ").strip()
+        if not description: return print("[ERROR] Description cannot be empty.")
+
+        # Persona association
         persona_id = None
         personas = self.data_store.get_all_personas()
         if personas:
             print("\nAvailable Personas:")
-            for persona in personas:
-                print(f"  {persona['id']}. {persona['name']}")
-            pid_input = input("Enter persona ID (or press Enter to skip): ").strip()
-            if pid_input.isdigit():
-                persona_id = int(pid_input)
-        
-        # Select journey stage
+            for p in personas: print(f"  {p['id']}. {p['name']}")
+            pid = input("Enter persona ID (or Enter to skip): ").strip()
+            if pid.isdigit() and self.data_store.get_persona(int(pid)):
+                persona_id = int(pid)
+
+        # Journey stage
         journey_stage = None
-        print("\nJourney Map Stages:")
-        print("  1. Awareness")
-        print("  2. Consideration")
-        print("  3. Decision")
-        print("  4. Retention")
-        print("  5. Advocacy")
-        stage_input = input("Select journey stage (1-5, or press Enter to skip): ").strip()
-        if stage_input:
-            stage_map = {
-                '1': 'Awareness',
-                '2': 'Consideration',
-                '3': 'Decision',
-                '4': 'Retention',
-                '5': 'Advocacy'
-            }
-            journey_stage = stage_map.get(stage_input)
-            if not journey_stage:
-                print("[WARNING] Invalid selection. Journey stage skipped.")
-        
+        stages = ["Awareness","Consideration","Decision","Retention","Advocacy"]
+        print("\nJourney Stages:")
+        for idx, s in enumerate(stages,1): print(f"{idx}. {s}")
+        stage_input = input("Select journey stage (1-5 or Enter to skip): ").strip()
+        if stage_input in [str(i) for i in range(1,6)]: journey_stage = stages[int(stage_input)-1]
+
+        # AI summary
         ai_summary = None
         if input("Generate AI summary? (y/n): ").strip().lower() == 'y':
             print("[PROCESSING] Generating AI summary...")
             ai_summary = self.ai_assistant.summarize_research(description)
-        
+
         insight_id = self.data_store.add_insight(title, description, persona_id, journey_stage, ai_summary)
         print(f"\n[SUCCESS] Insight created! (ID: {insight_id})")
-        if ai_summary:
-            print(f"\n[AI SUMMARY]\n{ai_summary}")
-    
+        if ai_summary: print(f"\n[AI SUMMARY]\n{ai_summary}")
+
     def view_all_insights(self):
-        """View all research insights."""
         insights = self.data_store.get_all_insights()
         if not insights:
-            print("\n[INFO] No insights created yet.")
-            if input("Would you like to create one? (y/n): ").strip().lower() == 'y':
-                self.create_insight()
-            return
-        print("\n--- All Research Insights ---")
-        for insight in insights:
-            self.print_insight_summary(insight)
-        
-        input("\nPress Enter to continue...")
-    
-    def print_insight_summary(self, insight: Dict):
-        """Print a summary of an insight."""
-        print(f"\n[INSIGHT] ID: {insight['id']} | Title: {insight['title']}")
-        desc = insight['description']
-        print(f"   Description: {desc[:100]}..." if len(desc) > 100 else f"   Description: {desc}")
-        if insight['persona_id']:
-            persona = self.data_store.get_persona(insight['persona_id'])
-            print(f"   Persona: {persona['name'] if persona else 'Unknown'}")
-        if insight['journey_stage']:
-            print(f"   Journey Stage: {insight['journey_stage']}")
-        print(f"   Created: {insight['timestamp']}")
-    
-    def view_specific_insight(self):
-        """View details of a specific insight."""
-        if not self.confirm_action("View Specific Insight"):
-            return
-        self.view_all_insights()
-        while True:
-            try:
-                insight_id = int(input("Enter insight ID to view: ").strip())
-                insight = self.data_store.get_insight(insight_id)
-                if not insight:
-                    print("[ERROR] Insight not found.")
-                    if not self.prompt_return_or_retry("main"):
-                        return
-                    continue
-                print("\n--- Insight Details ---")
-                print(f"ID: {insight['id']}\nTitle: {insight['title']}\nDescription: {insight['description']}")
-                if insight['persona_id']:
-                    persona = self.data_store.get_persona(insight['persona_id'])
-                    print(f"Persona: {persona['name'] if persona else 'Unknown'}")
-                if insight['journey_stage']:
-                    print(f"Journey Stage: {insight['journey_stage']}")
-                print(f"Created: {insight['timestamp']}")
-                if insight['ai_summary']:
-                    print(f"\n[AI SUMMARY]\n{insight['ai_summary']}")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    def edit_insight(self):
-        """Edit an existing insight."""
-        if not self.confirm_action("Edit Insight"):
-            return
-        self.view_all_insights()
-        while True:
-            try:
-                insight_id = int(input("Enter insight ID to edit: ").strip())
-                insight = self.data_store.get_insight(insight_id)
-                if not insight:
-                    print("[ERROR] Insight not found.")
-                    if not self.prompt_return_or_retry("main"):
-                        return
-                    continue
-                new_title = input(f"Title [{insight['title']}]: ").strip()
-                new_desc = input(f"Description [{insight['description'][:50]}...]: ").strip()
-                updates = {}
-                if new_title: updates['title'] = new_title
-                if new_desc: updates['description'] = new_desc
-                if updates:
-                    self.data_store.update_insight(insight_id, **updates)
-                    print("[SUCCESS] Insight updated!")
-                else:
-                    print("[INFO] No changes made.")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    def delete_insight(self):
-        """Delete an insight."""
-        if not self.confirm_action("Delete Insight"):
-            return
-        self.view_all_insights()
-        while True:
-            try:
-                insight_id = int(input("Enter insight ID to delete: ").strip())
-                if self.data_store.delete_insight(insight_id):
-                    print("[SUCCESS] Insight deleted!")
-                else:
-                    print("[ERROR] Insight not found.")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    def generate_ai_summary(self):
-        """Generate or regenerate AI summary for an insight."""
-        if not self.confirm_action("Generate AI Summary"):
-            return
-        self.view_all_insights()
-        
-        # Check if there are any insights after view_all_insights
-        if not self.data_store.get_all_insights():
-            return
-        
-        while True:
-            try:
-                insight_id = int(input("\nEnter insight ID to summarize: ").strip())
-                insight = self.data_store.get_insight(insight_id)
-                if not insight:
-                    print("[ERROR] Insight not found.")
-                    if not self.prompt_return_or_retry("main"):
-                        return
-                    continue
-                print("[PROCESSING] Generating AI summary...")
-                summary = self.ai_assistant.summarize_research(insight['description'])
-                if input("Save this summary to the insight? (y/n): ").strip().lower() == 'y':
-                    self.data_store.update_insight(insight_id, ai_summary=summary)
-                    print("[SUCCESS] Summary saved!")
-                print(f"\n[AI SUMMARY]\n{summary}")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    # ------------------ Personas ------------------ #
+            print("[INFO] No insights yet."); return
+        print("\n--- All Insights ---")
+        for i in insights:
+            print(f"\nID: {i['id']} | Title: {i['title']}")
+            print(f"Description: {i['description'][:100]}..." if len(i['description'])>100 else f"Description: {i['description']}")
+            if i['persona_id']:
+                persona = self.data_store.get_persona(i['persona_id'])
+                print(f"Persona: {persona['name'] if persona else 'Unknown'}")
+            if i['journey_stage']: print(f"Journey Stage: {i['journey_stage']}")
+            if i['ai_summary']: print(f"AI Summary: {i['ai_summary'][:100]}...")
+
+    # ---------- Personas ---------- #
     def manage_personas(self):
-        """Manage personas."""
         while True:
             self.display_persona_menu()
-            choice = input("Select an option: ").strip()
+            choice = input("Select: ").strip()
             if choice == '1': self.create_persona()
             elif choice == '2': self.view_all_personas()
             elif choice == '3': self.view_specific_persona()
@@ -471,149 +268,39 @@ class UXResearchManager:
             elif choice == '5': self.delete_persona()
             elif choice == '6': break
             else:
-                if not self.prompt_return_or_retry("persona"):
-                    break
-    
+                if not self.prompt_return_or_retry("persona"): break
+
     def create_persona(self):
-        """Create a new persona."""
-        if not self.confirm_action("Create New Persona"):
-            return
+        if not self.confirm_action("Create Persona"): return
         name = input("Enter persona name: ").strip()
-        if not name:
-            print("[ERROR] Name cannot be empty.")
-            return
-        desc = input("Enter persona description: ").strip()
-        if not desc:
-            print("[ERROR] Description cannot be empty.")
-            return
-        persona_id = self.data_store.add_persona(name, desc)
-        print(f"[SUCCESS] Persona created! (ID: {persona_id})")
-    
+        if not name: return print("[ERROR] Name cannot be empty.")
+        desc = input("Enter description: ").strip()
+        if not desc: return print("[ERROR] Description cannot be empty.")
+        pid = self.data_store.add_persona(name, desc)
+        print(f"[SUCCESS] Persona created! (ID: {pid})")
+
     def view_all_personas(self):
-        """View all personas."""
         personas = self.data_store.get_all_personas()
-        if not personas:
-            print("\n[INFO] No personas created yet.")
-            if input("Would you like to create one? (y/n): ").strip().lower() == 'y':
-                self.create_persona()
-            return
-        print("\n--- All Personas ---")
-        for persona in personas:
-            print(f"\n[PERSONA] ID: {persona['id']} | {persona['name']}")
-            desc = persona['description']
-            print(f"   Description: {desc[:100]}..." if len(desc) > 100 else f"   Description: {desc}")
-            print(f"   Created: {persona['timestamp']}")
-        
-        input("\nPress Enter to continue...")
-    
-    def view_specific_persona(self):
-        """View details of a specific persona."""
-        if not self.confirm_action("View Specific Persona"):
-            return
-        self.view_all_personas()
-        
-        # Check if there are any personas after view_all_personas
-        if not self.data_store.get_all_personas():
-            return
-        
-        while True:
-            try:
-                pid = int(input("\nEnter persona ID to view: ").strip())
-                persona = self.data_store.get_persona(pid)
-                if not persona:
-                    print("[ERROR] Persona not found.")
-                    if not self.prompt_return_or_retry("persona"):
-                        return
-                    continue
-                print(f"\nID: {persona['id']}\nName: {persona['name']}\nDescription: {persona['description']}\nCreated: {persona['timestamp']}")
-                linked = [i for i in self.data_store.get_all_insights() if i['persona_id'] == pid]
-                if linked:
-                    print(f"\nLinked Insights ({len(linked)}):")
-                    for i in linked:
-                        print(f" - {i['title']}")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    def edit_persona(self):
-        """Edit an existing persona."""
-        if not self.confirm_action("Edit Persona"):
-            return
-        self.view_all_personas()
-        
-        # Check if there are any personas after view_all_personas
-        if not self.data_store.get_all_personas():
-            return
-        
-        while True:
-            try:
-                pid = int(input("\nEnter persona ID to edit: ").strip())
-                persona = self.data_store.get_persona(pid)
-                if not persona:
-                    print("[ERROR] Persona not found.")
-                    if not self.prompt_return_or_retry("persona"):
-                        return
-                    continue
-                new_name = input(f"Name [{persona['name']}]: ").strip()
-                new_desc = input(f"Description [{persona['description'][:50]}...]: ").strip()
-                updates = {}
-                if new_name: updates['name'] = new_name
-                if new_desc: updates['description'] = new_desc
-                if updates:
-                    self.data_store.update_persona(pid, **updates)
-                    print("[SUCCESS] Persona updated!")
-                else:
-                    print("[INFO] No changes made.")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    def delete_persona(self):
-        """Delete a persona."""
-        if not self.confirm_action("Delete Persona"):
-            return
-        self.view_all_personas()
-        
-        # Check if there are any personas after view_all_personas
-        if not self.data_store.get_all_personas():
-            return
-        
-        while True:
-            try:
-                pid = int(input("\nEnter persona ID to delete: ").strip())
-                linked = [i for i in self.data_store.get_all_insights() if i['persona_id'] == pid]
-                if linked:
-                    print(f"[WARNING] This persona has {len(linked)} linked insights. Deleting will unlink them.")
-                if self.data_store.delete_persona(pid):
-                    print("[SUCCESS] Persona deleted!")
-                else:
-                    print("[ERROR] Persona not found.")
-                return
-            except ValueError:
-                print("[ERROR] Invalid input. Please enter a number.")
-    
-    # ------------------ Run ------------------ #
+        if not personas: return print("[INFO] No personas yet.")
+        for p in personas:
+            print(f"\nID: {p['id']} | {p['name']}")
+            print(f"Description: {p['description'][:100]}..." if len(p['description'])>100 else f"Description: {p['description']}")
+            print(f"Created: {p['timestamp']}")
+
+    # ---------- Run ---------- #
     def run(self):
-        """Run the main CLI loop."""
         print("\nWelcome to UX Research Manager!\n")
         while True:
             self.display_menu()
-            choice = input("Select an option: ").strip()
+            choice = input("Select: ").strip()
             if choice == '1': self.create_insight()
             elif choice == '2': self.view_all_insights()
-            elif choice == '3': self.view_specific_insight()
-            elif choice == '4': self.edit_insight()
-            elif choice == '5': self.delete_insight()
-            elif choice == '6': self.generate_ai_summary()
             elif choice == '7': self.manage_personas()
-            elif choice == '8':
-                print("\nThank you for using UX Research Manager! Goodbye!\n")
-                break
-            else:
-                if not self.prompt_return_or_retry("main"):
-                    continue
+            elif choice == '8': break
+            else: print("[ERROR] Invalid option.")
 
 
+# ------------------ Main ------------------ #
 def main():
     app = UXResearchManager()
     app.run()
