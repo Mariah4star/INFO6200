@@ -1,4 +1,14 @@
 {
-  "insights": [],
+  "insights": [
+    {
+      "id": 2,
+      "title": "Linked Test",
+      "description": "Description",
+      "persona_id": 1,
+      "journey_stage": null,
+      "timestamp": "2026-02-04T16:42:47.191605",
+      "ai_summary": null
+    }
+  ],
   "personas": []
 }
