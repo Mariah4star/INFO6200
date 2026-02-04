@@ -8,7 +8,23 @@
       "journey_stage": null,
       "timestamp": "2026-02-04T16:42:47.191605",
       "ai_summary": null
+    },
+    {
+      "id": 3,
+      "title": "Working on this app makes my cry",
+      "description": "This isn't how my brain works, it doesn't flow right and the colors make my head hurt",
+      "persona_id": null,
+      "journey_stage": "Awareness",
+      "timestamp": "2026-02-04T16:55:37.077517",
+      "ai_summary": "**Insight:** Users find the current interface confusing and visually overwhelming.\n\n**Key Findings:**\n- Users struggle with the layout and flow of the interface.\n- The color scheme is causing discomfort and distraction.\n\n**Implications for UX Designers:**\n- **Simplify Navigation:** Redesign the layout to follow a more intuitive and logical flow that aligns with user expectations.\n- **Improve Color Scheme:** Choose a color palette that is visually soothing and accessible. Consider using tools like color contrast checkers to ensure readability and comfort.\n- **User Testing:** Conduct further user testing to gather specific feedback on what aspects of the current design are problematic and how they can be improved."
     }
   ],
-  "personas": []
+  "personas": [
+    {
+      "id": 1,
+      "name": "Susan",
+      "description": "Tall, white woman in her 40's",
+      "timestamp": "2026-02-04T16:56:05.745101"
+    }
+  ]
 }

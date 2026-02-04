@@ -413,6 +413,51 @@ class UXResearchManager:
                 updates = {}
                 if new_title: updates['title'] = new_title
                 if new_desc: updates['description'] = new_desc
+                
+                # Option to connect/change persona
+                personas = self.data_store.get_all_personas()
+                if personas:
+                    print("\nAvailable Personas:")
+                    for persona in personas:
+                        print(f"  {persona['id']}. {persona['name']}")
+                    if insight['persona_id']:
+                        print(f"  (Current: {self.data_store.get_persona(insight['persona_id'])['name']})")
+                    pid_input = input("Enter persona ID to link (or press Enter to skip): ").strip()
+                    if pid_input.isdigit():
+                        pid = int(pid_input)
+                        if self.data_store.get_persona(pid):
+                            updates['persona_id'] = pid
+                        else:
+                            print("[WARNING] Persona not found. Skipping persona update.")
+                    elif pid_input.lower() == 'none':
+                        updates['persona_id'] = None
+                
+                # Option to change journey stage
+                print("\nJourney Map Stages:")
+                print("  1. Awareness")
+                print("  2. Consideration")
+                print("  3. Decision")
+                print("  4. Retention")
+                print("  5. Advocacy")
+                if insight['journey_stage']:
+                    print(f"  (Current: {insight['journey_stage']})")
+                stage_input = input("Select new journey stage (1-5, or press Enter to skip): ").strip()
+                if stage_input:
+                    stage_map = {
+                        '1': 'Awareness',
+                        '2': 'Consideration',
+                        '3': 'Decision',
+                        '4': 'Retention',
+                        '5': 'Advocacy'
+                    }
+                    new_stage = stage_map.get(stage_input)
+                    if new_stage:
+                        updates['journey_stage'] = new_stage
+                    else:
+                        print("[WARNING] Invalid selection. Journey stage skipped.")
+                elif stage_input == 'none':
+                    updates['journey_stage'] = None
+                
                 if updates:
                     self.data_store.update_insight(insight_id, **updates)
                     print("[SUCCESS] Insight updated!")
