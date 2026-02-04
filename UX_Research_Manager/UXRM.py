@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+print("KEY PREFIX:", os.getenv("MISTRAL_API_KEY", "")[:10])
+
+
 # Try to import Mistral AI
 try:
     from mistralai import Mistral
