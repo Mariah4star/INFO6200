@@ -23,7 +23,10 @@ try:
 except ImportError:
     MISTRAL_AVAILABLE = False
 
-
+from pathlib import Path
+print("[DEBUG] cwd:", Path.cwd())
+print("[DEBUG] .env here?:", Path(".env").exists())
+print("[DEBUG] key loaded?:", bool(os.getenv("MISTRAL_API_KEY")))
 
 # ------------------ Data Store ------------------ #
 class DataStore:
