@@ -29,7 +29,7 @@ except ImportError:
     MISTRAL_AVAILABLE = False
 
 # Data file paths
-DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR = Path(os.path.dirname(__file__)) / "data" if "__file__" in globals() else Path(os.getcwd()) / "data"
 DATA_FILE = DATA_DIR / "research_data.json"
 
 # Persistent data storage
