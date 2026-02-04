@@ -569,23 +569,28 @@ class UXResearchManager:
                 print("[ERROR] Invalid input. Please enter a number.")
     
     def delete_persona(self):
-        """Delete a persona."""
         if not self.confirm_action("Delete Persona"):
             return
         self.view_all_personas()
-        
-        # Check if there are any personas after view_all_personas
         if not self.data_store.get_all_personas():
             return
-        
+
         while True:
             try:
                 pid = int(input("\nEnter persona ID to delete: ").strip())
-                linked = [i for i in self.data_store.get_all_insights() if i['persona_id'] == pid]
+                linked = [i for i in self.data_store.get_all_insights() if i.get('persona_id') == pid]
                 if linked:
                     print(f"[WARNING] This persona has {len(linked)} linked insights. Deleting will unlink them.")
                 if self.data_store.delete_persona(pid):
-                    print("[SUCCESS] Persona deleted!")
+                    # Unlink any insights referencing this persona
+                    changed = False
+                    for insight in self.data_store.get_all_insights():
+                        if insight.get('persona_id') == pid:
+                            insight['persona_id'] = None
+                            changed = True
+                    if changed:
+                        self.data_store.save_to_file()
+                    print("[SUCCESS] Persona deleted and linked insights unlinked.")
                 else:
                     print("[ERROR] Persona not found.")
                 return
