@@ -1,14 +1,21 @@
 {
   "insights": [
     {
-      "id": 1,
-      "title": "Test Insight",
-      "description": "A test research note",
+      "id": 2,
+      "title": "Testing the Insight saving",
+      "description": "Testing this before crying",
       "persona_id": null,
-      "journey_stage": null,
-      "timestamp": "2026-02-03T23:39:45.970548",
-      "ai_summary": null
+      "journey_stage": "Consideration",
+      "timestamp": "2026-02-03T23:41:17.006641",
+      "ai_summary": "**Research Notes Summary:**\n\n1. **User Frustration with Current Flow:**\n   - Users find the current process of testing before crying too complex and time-consuming.\n   - Many users abandon the process before completion due to frustration.\n\n2. **Lack of Clear Instructions:**\n   - Users struggle with the lack of clear, step-by-step instructions.\n   - Confusion arises from unclear language and jargon.\n\n3. **Need for Immediate Feedback:**\n   - Users expect immediate feedback after each step.\n   - Delays in feedback lead to user dissatisfaction and disengagement.\n\n**Actionable Insights for UX Designers:**\n\n1. **Simplify the Process:**\n   - Streamline the testing flow to reduce the number of steps.\n   - Consider implementing a progress indicator to show users how far along they are.\n\n2. **Improve Instructions:**\n   - Use clear, concise language and avoid jargon.\n   - Provide step-by-step instructions with visual aids where possible.\n\n3. **Provide Immediate Feedback:**\n   - Offer real-time feedback after each user action.\n   - Consider using micro-interactions to acknowledge user inputs and guide them through the process.\n\n4. **Conduct User Testing:**\n   - Test the revised design with users to identify any remaining pain points.\n   - Iterate based on user feedback to ensure a smooth and satisfying user experience."
     }
   ],
-  "personas": []
+  "personas": [
+    {
+      "id": 1,
+      "name": "Susan",
+      "description": "Tall woman in her 40's from a small town in the south",
+      "timestamp": "2026-02-03T23:42:07.912951"
+    }
+  ]
 }
