@@ -26,6 +26,15 @@
       "journey_stage": null,
       "timestamp": "2026-02-04T16:21:06.261561",
       "ai_summary": null
+    },
+    {
+      "id": 5,
+      "title": "API Test Insight",
+      "description": "Users struggle with the navigation menu - it's not intuitive",
+      "persona_id": 1,
+      "journey_stage": null,
+      "timestamp": "2026-02-04T16:26:23.010938",
+      "ai_summary": null
     }
   ],
   "personas": [
