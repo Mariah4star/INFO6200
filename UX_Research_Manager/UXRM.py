@@ -11,9 +11,14 @@ import json
 from datetime import datetime
 from typing import Dict, List, Optional
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    def load_dotenv(*args, **kwargs):
+        pass  # no-op if dotenv not installed
+
 load_dotenv()
 
 # Try to import Mistral AI
