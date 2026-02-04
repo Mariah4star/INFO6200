@@ -14,14 +14,12 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-
 # Try to import Mistral AI
 try:
     from mistralai import Mistral
     MISTRAL_AVAILABLE = True
 except ImportError:
     MISTRAL_AVAILABLE = False
-
 
 # ------------------ Data Store ------------------ #
 class DataStore:
