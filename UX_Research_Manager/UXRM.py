@@ -298,7 +298,11 @@ class UXResearchManager:
                 print(f"  {persona['id']}. {persona['name']}")
             pid_input = input("Enter persona ID (or press Enter to skip): ").strip()
             if pid_input.isdigit():
-                persona_id = int(pid_input)
+                pid = int(pid_input)
+                if self.data_store.get_persona(pid):
+                    persona_id = pid
+                else:
+                    print("[WARNING] Persona not found. Skipping persona association.")
         
         # Select journey stage
         journey_stage = None
