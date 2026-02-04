@@ -1,14 +1,16 @@
 """
-UX Research Manager - CLI Prototype (Chunk 1)
+UX Research Manager - CLI Prototype (Chunk 2)
 
-This is a command-line interface prototype for managing UX research insights 
-and personas. It provides functionality to create, view, edit, and delete 
+This is a CLI application with persistent data storage for managing UX research 
+insights and personas. It provides functionality to create, view, edit, and delete 
 research insights, create and manage personas, and use AI to summarize research notes.
 """
 
 import os
+import json
 from datetime import datetime
 from typing import Dict, List, Optional
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -21,21 +23,58 @@ try:
 except ImportError:
     MISTRAL_AVAILABLE = False
 
-# In-memory storage
+# Data file paths
+DATA_DIR = Path(__file__).parent / "data"
+DATA_FILE = DATA_DIR / "research_data.json"
+
+# Persistent data storage
 class DataStore:
-    """Manages in-memory storage for insights and personas."""
+    """Manages persistent storage for insights and personas."""
     
     def __init__(self):
-        self.insights: Dict = {}
-        self.personas: Dict = {}
+        self.insights: List[Dict] = []
+        self.personas: List[Dict] = []
         self.next_insight_id = 1
         self.next_persona_id = 1
+        self.load_from_file()
+    
+    def load_from_file(self) -> None:
+        """Load insights and personas from JSON file."""
+        if not DATA_FILE.exists():
+            return
+        
+        try:
+            with open(DATA_FILE, 'r') as f:
+                data = json.load(f)
+                self.insights = data.get('insights', [])
+                self.personas = data.get('personas', [])
+                
+                # Recalculate next IDs based on existing data
+                if self.insights:
+                    self.next_insight_id = max(i['id'] for i in self.insights) + 1
+                if self.personas:
+                    self.next_persona_id = max(p['id'] for p in self.personas) + 1
+        except Exception as e:
+            print(f"[WARNING] Error loading data file: {e}")
+    
+    def save_to_file(self) -> None:
+        """Save insights and personas to JSON file."""
+        try:
+            DATA_DIR.mkdir(parents=True, exist_ok=True)
+            data = {
+                'insights': self.insights,
+                'personas': self.personas
+            }
+            with open(DATA_FILE, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"[WARNING] Error saving data file: {e}")
     
     def add_insight(self, title: str, description: str, persona_id: Optional[int] = None, 
                    journey_stage: Optional[str] = None, ai_summary: Optional[str] = None) -> int:
         """Add a new research insight."""
         insight_id = self.next_insight_id
-        self.insights[insight_id] = {
+        self.insights.append({
             'id': insight_id,
             'title': title,
             'description': description,
@@ -43,64 +82,80 @@ class DataStore:
             'journey_stage': journey_stage,
             'timestamp': datetime.now().isoformat(),
             'ai_summary': ai_summary
-        }
+        })
         self.next_insight_id += 1
+        self.save_to_file()
         return insight_id
     
     def get_insight(self, insight_id: int) -> Optional[Dict]:
         """Retrieve a specific insight."""
-        return self.insights.get(insight_id)
+        for insight in self.insights:
+            if insight['id'] == insight_id:
+                return insight
+        return None
     
     def get_all_insights(self) -> List[Dict]:
         """Retrieve all insights."""
-        return list(self.insights.values())
+        return self.insights
     
     def update_insight(self, insight_id: int, **kwargs) -> bool:
         """Update an insight."""
-        if insight_id not in self.insights:
-            return False
-        self.insights[insight_id].update(kwargs)
-        return True
+        for insight in self.insights:
+            if insight['id'] == insight_id:
+                insight.update(kwargs)
+                self.save_to_file()
+                return True
+        return False
     
     def delete_insight(self, insight_id: int) -> bool:
         """Delete an insight."""
-        if insight_id in self.insights:
-            del self.insights[insight_id]
-            return True
+        for i, insight in enumerate(self.insights):
+            if insight['id'] == insight_id:
+                self.insights.pop(i)
+                self.save_to_file()
+                return True
         return False
     
     def add_persona(self, name: str, description: str) -> int:
         """Add a new persona."""
         persona_id = self.next_persona_id
-        self.personas[persona_id] = {
+        self.personas.append({
             'id': persona_id,
             'name': name,
             'description': description,
             'timestamp': datetime.now().isoformat()
-        }
+        })
         self.next_persona_id += 1
+        self.save_to_file()
         return persona_id
     
     def get_persona(self, persona_id: int) -> Optional[Dict]:
         """Retrieve a specific persona."""
-        return self.personas.get(persona_id)
+        for persona in self.personas:
+            if persona['id'] == persona_id:
+                return persona
+        return None
     
     def get_all_personas(self) -> List[Dict]:
         """Retrieve all personas."""
-        return list(self.personas.values())
+        return self.personas
     
     def update_persona(self, persona_id: int, **kwargs) -> bool:
         """Update a persona."""
-        if persona_id not in self.personas:
-            return False
-        self.personas[persona_id].update(kwargs)
-        return True
+        for persona in self.personas:
+            if persona['id'] == persona_id:
+                persona.update(kwargs)
+                self.save_to_file()
+                return True
+        return False
     
     def delete_persona(self, persona_id: int) -> bool:
         """Delete a persona."""
-        if persona_id in self.personas:
-            del self.personas[persona_id]
-            return True
+        for i, persona in enumerate(self.personas):
+            if persona['id'] == persona_id:
+                self.personas.pop(i)
+                self.save_to_file()
+                return True
         return False
 
 

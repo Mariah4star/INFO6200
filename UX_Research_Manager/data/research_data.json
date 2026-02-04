@@ -1,0 +1,14 @@
+{
+  "insights": [
+    {
+      "id": 1,
+      "title": "Test Insight",
+      "description": "A test research note",
+      "persona_id": null,
+      "journey_stage": null,
+      "timestamp": "2026-02-03T23:39:45.970548",
+      "ai_summary": null
+    }
+  ],
+  "personas": []
+}
