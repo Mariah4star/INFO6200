@@ -9,6 +9,10 @@ research insights, create and manage personas, and use AI to summarize research 
 import os
 from datetime import datetime
 from typing import Dict, List, Optional
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Try to import Mistral AI
 try:
