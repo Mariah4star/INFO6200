@@ -12,13 +12,12 @@ from datetime import datetime
 from typing import Dict, List, Optional
 from pathlib import Path
 
-# Load environment variables from .env file (optional dependency)
+# Load environment variables from .env file
 try:
     from dotenv import load_dotenv
 except ImportError:
     def load_dotenv(*args, **kwargs):
-        # No-op if python-dotenv is not installed
-        pass
+        pass  # no-op if dotenv not installed
 
 load_dotenv()
 
@@ -29,8 +28,8 @@ try:
 except ImportError:
     MISTRAL_AVAILABLE = False
 
-# Data file paths
-DATA_DIR = Path(__file__).parent / "data"
+# Data file paths (web-ready with environment variable override)
+DATA_DIR = Path(os.getenv("DATA_DIR", Path(__file__).parent / "data"))
 DATA_FILE = DATA_DIR / "research_data.json"
 
 # Persistent data storage
@@ -414,6 +413,51 @@ class UXResearchManager:
                 updates = {}
                 if new_title: updates['title'] = new_title
                 if new_desc: updates['description'] = new_desc
+                
+                # Option to connect/change persona
+                personas = self.data_store.get_all_personas()
+                if personas:
+                    print("\nAvailable Personas:")
+                    for persona in personas:
+                        print(f"  {persona['id']}. {persona['name']}")
+                    if insight['persona_id']:
+                        print(f"  (Current: {self.data_store.get_persona(insight['persona_id'])['name']})")
+                    pid_input = input("Enter persona ID to link (or press Enter to skip): ").strip()
+                    if pid_input.isdigit():
+                        pid = int(pid_input)
+                        if self.data_store.get_persona(pid):
+                            updates['persona_id'] = pid
+                        else:
+                            print("[WARNING] Persona not found. Skipping persona update.")
+                    elif pid_input.lower() == 'none':
+                        updates['persona_id'] = None
+                
+                # Option to change journey stage
+                print("\nJourney Map Stages:")
+                print("  1. Awareness")
+                print("  2. Consideration")
+                print("  3. Decision")
+                print("  4. Retention")
+                print("  5. Advocacy")
+                if insight['journey_stage']:
+                    print(f"  (Current: {insight['journey_stage']})")
+                stage_input = input("Select new journey stage (1-5, or press Enter to skip): ").strip()
+                if stage_input:
+                    stage_map = {
+                        '1': 'Awareness',
+                        '2': 'Consideration',
+                        '3': 'Decision',
+                        '4': 'Retention',
+                        '5': 'Advocacy'
+                    }
+                    new_stage = stage_map.get(stage_input)
+                    if new_stage:
+                        updates['journey_stage'] = new_stage
+                    else:
+                        print("[WARNING] Invalid selection. Journey stage skipped.")
+                elif stage_input == 'none':
+                    updates['journey_stage'] = None
+                
                 if updates:
                     self.data_store.update_insight(insight_id, **updates)
                     print("[SUCCESS] Insight updated!")
@@ -579,23 +623,28 @@ class UXResearchManager:
                 print("[ERROR] Invalid input. Please enter a number.")
     
     def delete_persona(self):
-        """Delete a persona."""
         if not self.confirm_action("Delete Persona"):
             return
         self.view_all_personas()
-        
-        # Check if there are any personas after view_all_personas
         if not self.data_store.get_all_personas():
             return
-        
+
         while True:
             try:
                 pid = int(input("\nEnter persona ID to delete: ").strip())
-                linked = [i for i in self.data_store.get_all_insights() if i['persona_id'] == pid]
+                linked = [i for i in self.data_store.get_all_insights() if i.get('persona_id') == pid]
                 if linked:
                     print(f"[WARNING] This persona has {len(linked)} linked insights. Deleting will unlink them.")
                 if self.data_store.delete_persona(pid):
-                    print("[SUCCESS] Persona deleted!")
+                    # Unlink any insights referencing this persona
+                    changed = False
+                    for insight in self.data_store.get_all_insights():
+                        if insight.get('persona_id') == pid:
+                            insight['persona_id'] = None
+                            changed = True
+                    if changed:
+                        self.data_store.save_to_file()
+                    print("[SUCCESS] Persona deleted and linked insights unlinked.")
                 else:
                     print("[ERROR] Persona not found.")
                 return
