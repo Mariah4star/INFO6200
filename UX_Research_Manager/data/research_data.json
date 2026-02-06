@@ -18,19 +18,5 @@
       "timestamp": "2026-02-05T14:38:44.870998",
       "ai_summary": "**Research Notes Summary:**\n\n1. **Understanding Elliptical Curves (EC):**\n   - EC are defined by the equation y\u00b2 = x\u00b3 + ax + b, with specific conditions.\n   - They offer a more secure and efficient alternative to traditional methods like RSA for encryption and cybersecurity.\n\n2. **Elliptical Curve Cryptography (ECC):**\n   - ECC is a public-key cryptography system based on EC.\n   - It provides equivalent security with smaller key sizes compared to RSA.\n\n3. **Key Features of ECC:**\n   - **Smaller Key Sizes:** ECC uses smaller key sizes (e.g., 256-bit ECC key \u2248 3072-bit RSA key) for similar security levels.\n   - **Faster Computations:** ECC offers faster computations and reduced power consumption.\n   - **Scalability:** ECC is highly scalable and suitable for resource-constrained environments.\n\n4. **Applications of ECC:**\n   - **Encryption:** ECC can be used for symmetric encryption (e.g., ECDH - Elliptic Curve Diffie-Hellman).\n   - **Digital Signatures:** ECC supports digital signatures (e.g., ECDSA - Elliptic Curve Digital Signature Algorithm).\n   - **Key Exchange:** ECC enables secure key exchange protocols.\n\n5. **Challenges and Considerations:**\n   - **Implementation:** Proper implementation is crucial to avoid vulnerabilities.\n   - **Standardization:** Follow established standards like NIST, SECG, or RFCs.\n   - **Side-Channel Attacks:** Be aware of and mitigate side-channel attacks.\n\n**Actionable Insights for UX Designers:**\n\n1. **Educate Users:** Provide clear, concise information about the benefits and security aspects of ECC.\n2. **Simplify Key Management:** Design intuitive interfaces for key generation, storage, and management.\n3. **Ensure Transparency:** Clearly communicate the use of ECC in encryption and security processes.\n4. **Prioritize Usability:** Make ECC-based security features easy to use and understand for all user levels.\n5. **Address Concerns:** Acknowledge and address potential user concerns about ECC and its implementation.\n6. **Stay Updated:** Keep abreast of the latest developments and standards in ECC to ensure ongoing security and usability."
     }
-  ],
-  "personas": [
-    {
-      "id": 1,
-      "name": "Susan",
-      "description": "Tall, white woman in her 40's",
-      "timestamp": "2026-02-04T16:56:05.745101"
-    },
-    {
-      "id": 2,
-      "name": "Test Persona",
-      "description": "A test user",
-      "timestamp": "2026-02-04T16:58:50.757098"
-    }
   ]
 }

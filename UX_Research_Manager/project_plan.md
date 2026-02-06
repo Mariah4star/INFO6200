@@ -88,3 +88,20 @@ Design and implement a data model for the UX Research Manager app. Refactor the 
 # Files to create:
 - A new directory for stored data files
 - A data file (.JSON file) for persisting research insights and personas
+
+## Chunk 3: Achieving Data Persistence
+
+# Goal: 
+Make sure that research insights and personas persist across sessions by saving structured data to an external file and loading it on application startup.
+
+# Tasks: 
+1. Check for the existence of a JSON data file on application startup.
+2. Load existing research insights and personas from the file if it exists.
+3. Initialize empty data structures if the file does not exist.
+4. Save the full updated dataset to the JSON file immediately whenever data is modified.
+5. Make sure the data is stored in a structured, human-readable format.
+6. Maintain the same CLI behavior and user experience as previous chunks.
+
+# Files:
+- Updated Python file (UXRM.py)
+- The research_data.json file has at least two records
