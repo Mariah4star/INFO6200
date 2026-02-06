@@ -1,9 +1,11 @@
 """
-UX Research Manager - CLI Prototype (Chunk 2)
+UX Research Manager - CLI Prototype (Chunk 3)
 
-This is a CLI application with persistent data storage for managing UX research 
-insights and personas. It provides functionality to create, view, edit, and delete 
-research insights, create and manage personas, and use AI to summarize research notes.
+This is a command-line application for managing UX research insights and personas.
+It includes persistent data storage using JSON, so all insights and personas are saved
+and loaded automatically. Users can create, view, edit, and delete research insights,
+manage personas, and generate AI-assisted summaries of research notes.
+
 """
 
 import os
