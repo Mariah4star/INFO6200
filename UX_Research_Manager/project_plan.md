@@ -89,7 +89,7 @@ Design and implement a data model for the UX Research Manager app. Refactor the 
 - A new directory for stored data files
 - A data file (.JSON file) for persisting research insights and personas
 
-## Chunk 3: Achieving Data Persistence
+## Chunk 2.5: Achieving Data Persistence
 
 # Goal: 
 Make sure that research insights and personas persist across sessions by saving structured data to an external file and loading it on application startup.
