@@ -121,7 +121,7 @@ Introduce a minimal web interface using Flask as the first step in transitioning
   - Medium Blue (#5B9DE3): Secondary Interaction. Used for active states, secondary buttons (like "Edit"), and highlighting selected filters. 
   - Bright Turquoise (#5BE3D2): AI & Insights. Specifically designated for the AI-assisted summarization feature. 
   - Sky Blue (#5BC8E3): Categorization & Tags. Used for persona labels and journey stage chips. 
-  - Seafoam Green (#5BE3A4): Success & Validation. Utilized for "Save" confirmations and indicating that an insight has been successfully "Validated" or linked to a persona.
+  - Pink (#EC4899): Success & Validation. Utilized for "Save" confirmations and indicating that an insight has been successfully "Validated" or linked to a persona.
   -  Soft Blue (#A6D7E3): UI Accents. Best for hover states, subtle borders, or search bar backgrounds. 
   - Pure White (#FFFFFF): The Workspace Canvas. Used as the background for all research cards and data entries. 
 - User Interface 
