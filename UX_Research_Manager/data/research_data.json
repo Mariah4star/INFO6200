@@ -31,16 +31,6 @@
       "persona_name": "Susan"
     },
     {
-      "id": 7,
-      "title": "API Test Insight",
-      "description": "Created via Flask API",
-      "persona_id": 1,
-      "journey_stage": null,
-      "timestamp": "2026-02-10T11:12:35.514856",
-      "ai_summary": "**Research Notes:**\n\n1. **User Feedback on Current Interface:**\n   - Users find the current interface cluttered and confusing.\n   - Navigation is not intuitive, with users struggling to find key features.\n   - Color scheme is harsh and not accessible to users with visual impairments.\n\n2. **User Testing Results:**\n   - Task completion rate is low (65%), with many users failing to complete primary tasks.\n   - Users expressed frustration with the lack of clear instructions and feedback.\n   - Users appreciated the speed of the interface but found it unresponsive at times.\n\n3. **Competitor Analysis:**\n   - Competitors offer cleaner, more intuitive interfaces with better navigation.\n   - Competitors provide clear instructions and feedback, leading to higher task completion rates (85%+).\n   - Competitors use more accessible color schemes and offer customization options.\n\n4. **User Needs and Pain Points:**\n   - Users need a clear, intuitive interface with easy navigation.\n   - Users want clear instructions and feedback to guide them through tasks.\n   - Users desire a more visually appealing and accessible interface.\n\n**Actionable Insights for UX Designers:**\n\n1. **Simplify and Improve Navigation:**\n   - Redesign the interface to reduce clutter and improve navigation.\n   - Implement a clear, intuitive menu structure to help users find key features easily.\n\n2. **Enhance Usability:**\n   - Provide clear instructions and feedback to guide users through tasks.\n   - Ensure the interface is responsive and addresses any performance issues.\n\n3. **Improve Visual Design and Accessibility:**\n   - Adopt a more visually appealing color scheme that is accessible to all users.\n   - Consider offering customization options to cater to diverse user preferences.\n\n4. **Incorporate User-Centered Design Principles:**\n   - Prioritize user needs and pain points in the design process.\n   - Conduct user testing to gather feedback and iterate on the design.\n\nBy addressing these insights, UX designers can create a more intuitive, user-friendly interface that meets user needs and outperforms competitors.",
-      "persona_name": "Joe"
-    },
-    {
       "id": 8,
       "title": "Mary testing the app",
       "description": "Mary is testing our app and is rocking it. She has a few hesitations about finding everything, but in the end does. ",
