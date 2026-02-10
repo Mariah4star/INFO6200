@@ -88,6 +88,59 @@ def view_insight(insight_id):
         insight=insight
     )
 
+@app.route('/insights/<int:insight_id>/edit', methods=['GET', 'POST'])
+def edit_insight(insight_id):
+    """Edit an insight."""
+    insight = data_store.get_insight(insight_id)
+    if not insight:
+        return "Insight not found", 404
+    
+    if request.method == 'POST':
+        # Handle form submission
+        try:
+            title = request.form.get('title')
+            description = request.form.get('description')
+            persona_id = request.form.get('persona_id')
+            journey_stage = request.form.get('journey_stage')
+            
+            # Convert empty strings to None
+            persona_id = int(persona_id) if persona_id else None
+            journey_stage = journey_stage if journey_stage else None
+            
+            # Update the insight
+            data_store.update_insight(
+                insight_id,
+                title=title,
+                description=description,
+                persona_id=persona_id,
+                journey_stage=journey_stage
+            )
+            
+            return redirect(url_for('view_insight', insight_id=insight_id))
+        except Exception as e:
+            return f"Error updating insight: {str(e)}", 400
+    
+    # GET request - show edit form
+    personas_list = data_store.get_all_personas()
+    return render_template(
+        'edit_insight.html',
+        colors=COLORS,
+        insight=insight,
+        personas=personas_list
+    )
+
+@app.route('/insights/<int:insight_id>/delete', methods=['POST'])
+def delete_insight(insight_id):
+    """Delete an insight."""
+    try:
+        success = data_store.delete_insight(insight_id)
+        if success:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'message': 'Insight not found'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
 @app.route('/personas')
 def personas():
     """View all personas."""
