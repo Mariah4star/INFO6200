@@ -18,7 +18,7 @@ app = Flask(__name__,
 COLORS = {
     'royal_blue': '#5B72E3',      # Primary Action
     'medium_blue': '#5B9DE3',      # Secondary Interaction
-    'bright_turquoise': '#5BE3D2', # AI & Insights
+    'bright_turquoise': '#2BB5A5', # AI & Insights
     'sky_blue': '#5BC8E3',         # Categorization & Tags
     'seafoam_green': "#EC4899",    # Success & Validation
     'soft_blue': '#A6D7E3',        # UI Accents
