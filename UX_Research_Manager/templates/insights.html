@@ -102,12 +102,29 @@ function generateSummary(id) {
 }
 
 function editInsight(id) {
-    alert('Edit feature coming soon: Insight ' + id);
+    window.location.href = '/insights/' + id + '/edit';
 }
 
 function deleteInsight(id) {
-    if (confirm('Are you sure?')) {
-        alert('Delete feature coming soon: Insight ' + id);
+    if (confirm('Are you sure you want to delete this insight? This cannot be undone.')) {
+        fetch(`/insights/${id}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting insight');
+        });
     }
 }
 </script>
