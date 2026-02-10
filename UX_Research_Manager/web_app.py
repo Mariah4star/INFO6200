@@ -5,7 +5,7 @@ A Flask web application for the UX Research Manager with a filter-centric dashbo
 Uses the Aquatic color palette for a calm, high-focus research environment.
 """
 
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, redirect
 from UXRM import data_store, ai_assistant
 from datetime import datetime
 
@@ -87,6 +87,74 @@ def about():
         'about.html',
         colors=COLORS
     )
+
+@app.route('/insights/new')
+def new_insight():
+    """Show form to create new insight."""
+    personas = data_store.get_all_personas()
+    return render_template(
+        'create_insight.html',
+        colors=COLORS,
+        personas=personas
+    )
+
+@app.route('/insights', methods=['POST'])
+def create_insight():
+    """Handle creating a new insight."""
+    try:
+        title = request.form.get('title')
+        description = request.form.get('description')
+        persona_id = request.form.get('persona_id')
+        journey_stage = request.form.get('journey_stage')
+        
+        # Convert empty strings to None
+        persona_id = int(persona_id) if persona_id else None
+        journey_stage = journey_stage if journey_stage else None
+        
+        # Get AI summary
+        ai_summary = ''
+        try:
+            ai_response = ai_assistant.analyze_insight(description)
+            ai_summary = ai_response
+        except Exception as e:
+            ai_summary = f"Error generating summary: {str(e)}"
+        
+        # Add the insight
+        data_store.add_insight(
+            title=title,
+            description=description,
+            persona_id=persona_id,
+            journey_stage=journey_stage,
+            ai_summary=ai_summary
+        )
+        
+        return redirect(url_for('insights'))
+    except Exception as e:
+        return f"Error creating insight: {str(e)}", 400
+
+@app.route('/personas/new')
+def new_persona():
+    """Show form to create new persona."""
+    return render_template(
+        'create_persona.html',
+        colors=COLORS
+    )
+
+@app.route('/personas', methods=['POST'])
+def create_persona():
+    """Handle creating a new persona."""
+    try:
+        name = request.form.get('name')
+        description = request.form.get('description')
+        
+        data_store.add_persona(
+            name=name,
+            description=description
+        )
+        
+        return redirect(url_for('personas'))
+    except Exception as e:
+        return f"Error creating persona: {str(e)}", 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
