@@ -105,3 +105,31 @@ Make sure that research insights and personas persist across sessions by saving 
 # Files:
 - Updated Python file (UXRM.py)
 - The research_data.json file has at least two records
+
+## Chunk 3: Web Interface Using Flask
+
+# Goal: 
+Introduce a minimal web interface using Flask as the first step in transitioning from a CLI application to a web application.
+
+# Tasks: 
+1. Define a single route for the URL.
+2. When the user lands on the root URL (/), the application must return a simple string or HTML response (e.g., a “Hello, Web!” message).
+
+# User Experience:
+- For the color, the "Aquatic" palette was selected to create a calm, high-focus environment that reduces cognitive load for researchers. 
+  - Royal Blue (#5B72E3): Primary Action Color. Reserved for the most important interactions, such as "Create New Insight," "Register," and the main navigation sidebar. 
+  - Medium Blue (#5B9DE3): Secondary Interaction. Used for active states, secondary buttons (like "Edit"), and highlighting selected filters. 
+  - Bright Turquoise (#5BE3D2): AI & Insights. Specifically designated for the AI-assisted summarization feature. 
+  - Sky Blue (#5BC8E3): Categorization & Tags. Used for persona labels and journey stage chips. 
+  - Seafoam Green (#5BE3A4): Success & Validation. Utilized for "Save" confirmations and indicating that an insight has been successfully "Validated" or linked to a persona.
+  -  Soft Blue (#A6D7E3): UI Accents. Best for hover states, subtle borders, or search bar backgrounds. 
+  - Pure White (#FFFFFF): The Workspace Canvas. Used as the background for all research cards and data entries. 
+- User Interface 
+  - The design is a Filter-Centric Dashboard. This layout prioritizes data discoverability through a top-level filtering system, allowing researchers to slice data by persona or journey stage. 
+- I would like to know when the AI is loading the research summary
+- I would like the navigation to be on the top with an easy-to-use interface
+- I would like each main menu option to be on its own page
+
+# Files to create:
+- web_app.py file containing the minimal Flask application
+
