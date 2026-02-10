@@ -1,10 +1,15 @@
 """
-UX Research Manager - CLI Prototype (Chunk 3)
+UX Research Manager - CLI & Web Prototype (Chunk 3)
 
-This is a command-line application for managing UX research insights and personas.
-It includes persistent data storage using JSON, so all insights and personas are saved
-and loaded automatically. Users can create, view, edit, and delete research insights,
-manage personas, and generate AI-assisted summaries of research notes.
+This is a hybrid application for managing UX research insights and personas.
+It includes:
+  - Command-line interface for interactive use
+  - Flask web API for programmatic access
+  - Persistent data storage using JSON
+  - AI-assisted summaries via Mistral API
+
+Users can create, view, edit, and delete research insights, manage personas,
+and generate AI-assisted summaries of research notes.
 
 """
 
@@ -13,6 +18,8 @@ import json
 from datetime import datetime
 from typing import Dict, List, Optional
 from pathlib import Path
+from flask import Flask, request, jsonify
+
 
 # Load environment variables from .env file
 try:
@@ -680,5 +687,128 @@ def main():
     app.run()
 
 
+# Flask Web API
+flask_app = Flask(__name__)
+data_store = DataStore()
+ai_assistant = AIAssistant()
+
+
+@flask_app.route('/api/insights', methods=['GET'])
+def get_insights():
+    """Get all insights."""
+    return jsonify({'insights': data_store.get_all_insights()})
+
+
+@flask_app.route('/api/insights', methods=['POST'])
+def create_insight_api():
+    """Create a new insight."""
+    try:
+        data = request.json
+        insight_id = data_store.add_insight(
+            title=data.get('title'),
+            description=data.get('description'),
+            persona_id=data.get('persona_id'),
+            journey_stage=data.get('journey_stage'),
+            ai_summary=data.get('ai_summary')
+        )
+        return jsonify({'success': True, 'id': insight_id}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@flask_app.route('/api/insights/<int:insight_id>', methods=['GET'])
+def get_insight(insight_id):
+    """Get a specific insight."""
+    insight = data_store.get_insight(insight_id)
+    if not insight:
+        return jsonify({'error': 'Insight not found'}), 404
+    return jsonify(insight)
+
+
+@flask_app.route('/api/insights/<int:insight_id>', methods=['PUT'])
+def update_insight_api(insight_id):
+    """Update an insight."""
+    try:
+        data = request.json
+        if data_store.update_insight(insight_id, **data):
+            return jsonify({'success': True})
+        return jsonify({'error': 'Insight not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@flask_app.route('/api/insights/<int:insight_id>', methods=['DELETE'])
+def delete_insight_api(insight_id):
+    """Delete an insight."""
+    if data_store.delete_insight(insight_id):
+        return jsonify({'success': True})
+    return jsonify({'error': 'Insight not found'}), 404
+
+
+@flask_app.route('/api/personas', methods=['GET'])
+def get_personas():
+    """Get all personas."""
+    return jsonify({'personas': data_store.get_all_personas()})
+
+
+@flask_app.route('/api/personas', methods=['POST'])
+def create_persona_api():
+    """Create a new persona."""
+    try:
+        data = request.json
+        persona_id = data_store.add_persona(
+            name=data.get('name'),
+            description=data.get('description')
+        )
+        return jsonify({'success': True, 'id': persona_id}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@flask_app.route('/api/personas/<int:persona_id>', methods=['GET'])
+def get_persona(persona_id):
+    """Get a specific persona."""
+    persona = data_store.get_persona(persona_id)
+    if not persona:
+        return jsonify({'error': 'Persona not found'}), 404
+    return jsonify(persona)
+
+
+@flask_app.route('/api/personas/<int:persona_id>', methods=['PUT'])
+def update_persona_api(persona_id):
+    """Update a persona."""
+    try:
+        data = request.json
+        if data_store.update_persona(persona_id, **data):
+            return jsonify({'success': True})
+        return jsonify({'error': 'Persona not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@flask_app.route('/api/personas/<int:persona_id>', methods=['DELETE'])
+def delete_persona_api(persona_id):
+    """Delete a persona."""
+    if data_store.delete_persona(persona_id):
+        return jsonify({'success': True})
+    return jsonify({'error': 'Persona not found'}), 404
+
+
+@flask_app.route('/api/summarize', methods=['POST'])
+def summarize_api():
+    """Generate AI summary for research notes."""
+    try:
+        data = request.json
+        summary = ai_assistant.summarize_research(data.get('notes', ''))
+        return jsonify({'summary': summary})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
 if __name__ == "__main__":
-    main()
+    # Check if Flask is being used
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == 'web':
+        flask_app.run(debug=True)
+    else:
+        main()
