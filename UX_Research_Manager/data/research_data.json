@@ -31,13 +31,13 @@
       "persona_name": "Susan"
     },
     {
-      "id": 9,
-      "title": "Mary Testing",
+      "id": 10,
+      "title": "Mary ",
       "description": "Mary is testing our app and is rocking it. She has a few hesitations about finding everything, but in the end does. ",
       "persona_id": 5,
-      "journey_stage": "Consideration",
-      "timestamp": "2026-02-10T16:48:40.523171",
-      "ai_summary": "Error generating summary: 'AIAssistant' object has no attribute 'analyze_insight'"
+      "journey_stage": "Decision",
+      "timestamp": "2026-02-10T16:54:37.128491",
+      "ai_summary": "**Insight:** Users may initially struggle with navigation and discoverability within the app.\n\n**Actionable Implications for UX Designers:**\n1. **Improve Information Architecture:** Ensure that the app's structure and organization are intuitive and easy to understand. Consider using clear and consistent labeling, and group related features together.\n2. **Enhance Search Functionality:** Implement a robust search feature that allows users to quickly find what they're looking for. Include filters and sorting options to help users narrow down results.\n3. **Provide Clear Navigation Paths:** Use breadcrumbs, clear headings, and consistent navigation menus to help users understand where they are within the app and how to get to other sections.\n4. **Conduct Usability Testing:** Regularly test the app with users to identify any navigation or discoverability issues and make improvements accordingly."
     }
   ],
   "personas": [
