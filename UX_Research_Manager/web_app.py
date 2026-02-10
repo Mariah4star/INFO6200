@@ -20,7 +20,7 @@ COLORS = {
     'medium_blue': '#5B9DE3',      # Secondary Interaction
     'bright_turquoise': '#5BE3D2', # AI & Insights
     'sky_blue': '#5BC8E3',         # Categorization & Tags
-    'seafoam_green': "#EC4899",    # Success & Validation
+    'pinks': "#EC4899",    # Success & Validation
     'soft_blue': '#A6D7E3',        # UI Accents
     'white': '#FFFFFF'             # Workspace Canvas
 }
