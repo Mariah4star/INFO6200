@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>About UX Research Manager</h1>
+
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2>What is UX Research Manager?</h2>
+    <p>UX Research Manager is a tool designed to help UX designers and researchers organize, store, and analyze research insights in one place.</p>
+    
+    <h2>Core Features</h2>
+    <ul style="margin-left: 2rem;">
+        <li>📝 Create and manage research insights</li>
+        <li>👥 Define and link personas</li>
+        <li>🗺️ Map insights to user journey stages</li>
+        <li>🤖 AI-powered research summarization</li>
+        <li>💾 Persistent data storage</li>
+    </ul>
+    
+    <h2>Technology Stack</h2>
+    <p>Built with Python, Flask, and powered by Mistral AI</p>
+    
+    <h2>Color Palette</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 1rem 0;">
+        {% for name, color in colors.items() %}
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: {{ color }}; border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>{{ name.replace('_', ' ').title() }}</small><br/>
+            <code style="font-size: 0.8rem;">{{ color }}</code>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

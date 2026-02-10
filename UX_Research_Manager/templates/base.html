@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Research Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        :root {
+            --royal-blue: {{ colors['royal_blue'] }};
+            --medium-blue: {{ colors['medium_blue'] }};
+            --bright-turquoise: {{ colors['bright_turquoise'] }};
+            --sky-blue: {{ colors['sky_blue'] }};
+            --seafoam-green: {{ colors['seafoam_green'] }};
+            --soft-blue: {{ colors['soft_blue'] }};
+            --white: {{ colors['white'] }};
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/insights">Insights</a></li>
+            <li><a href="/personas">Personas</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

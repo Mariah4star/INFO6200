@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>User Personas</h1>
+
+<div style="margin-bottom: 2rem;">
+    <button class="btn btn-success" onclick="window.location.href='/personas/new'">+ New Persona</button>
+</div>
+
+{% if personas %}
+<div class="personas-list">
+    {% for persona in personas %}
+    <div class="persona-item">
+        <h4>{{ persona.name }}</h4>
+        <p>{{ persona.description }}</p>
+        <div class="meta">Created: {{ persona.timestamp }}</div>
+        <div style="margin-top: 0.5rem;">
+            <button class="btn btn-secondary" onclick="editPersona('{{ persona.id }}')">Edit</button>
+            <button class="btn" onclick="deletePersona('{{ persona.id }}')" style="background-color: #e74c3c;">Delete</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No personas created yet.</p>
+    <button class="btn" onclick="window.location.href='/personas/new'">Create Your First Persona</button>
+</div>
+{% endif %}
+
+<script>
+function editPersona(id) {
+    alert('Edit feature coming soon: Persona ' + id);
+}
+
+function deletePersona(id) {
+    if (confirm('Are you sure?')) {
+        alert('Delete feature coming soon: Persona ' + id);
+    }
+}
+</script>
+{% endblock %}

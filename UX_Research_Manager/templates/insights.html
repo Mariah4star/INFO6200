@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Research Insights</h1>
+
+<div class="filter-section">
+    <h3>🔍 Filter & Search</h3>
+    <div class="filter-group">
+        <select id="personaFilter" onchange="filterInsights()">
+            <option value="">All Personas</option>
+            {% for persona in personas %}
+            <option value="{{ persona.id }}">{{ persona.name }}</option>
+            {% endfor %}
+        </select>
+        <select id="stageFilter" onchange="filterInsights()">
+            <option value="">All Stages</option>
+            <option value="Awareness">Awareness</option>
+            <option value="Consideration">Consideration</option>
+            <option value="Decision">Decision</option>
+            <option value="Retention">Retention</option>
+            <option value="Advocacy">Advocacy</option>
+        </select>
+        <button class="btn btn-secondary" onclick="window.location.href='/insights/new'">+ New Insight</button>
+    </div>
+</div>
+
+<h2>All Insights</h2>
+{% if insights %}
+<div class="insights-list">
+    {% for insight in insights %}
+    <div class="insight-item">
+        <h4>{{ insight.title }}</h4>
+        <p>{{ insight.description }}</p>
+        {% if insight.persona_id %}
+        <span class="chip">{{ insight.persona_name }}</span>
+        {% endif %}
+        {% if insight.journey_stage %}
+        <span class="chip">{{ insight.journey_stage }}</span>
+        {% endif %}
+        {% if insight.ai_summary %}
+        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--soft-blue);">
+            <strong style="color: var(--bright-turquoise);">🤖 AI Summary:</strong>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">{{ insight.ai_summary[:200] }}...</p>
+        </div>
+        {% endif %}
+        <div class="meta">Created: {{ insight.timestamp }}</div>
+        <div style="margin-top: 0.5rem;">
+            <button class="btn btn-secondary" onclick="editInsight('{{ insight.id }}')">Edit</button>
+            <button class="btn" onclick="deleteInsight('{{ insight.id }}')" style="background-color: #e74c3c;">Delete</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No insights created yet.</p>
+    <button class="btn" onclick="window.location.href='/insights/new'">Create Your First Insight</button>
+</div>
+{% endif %}
+
+<script>
+function filterInsights() {
+    // TODO: Implement filtering
+    console.log('Filtering insights...');
+}
+
+function editInsight(id) {
+    alert('Edit feature coming soon: Insight ' + id);
+}
+
+function deleteInsight(id) {
+    if (confirm('Are you sure?')) {
+        alert('Delete feature coming soon: Insight ' + id);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>UX Research Manager</h1>
+    <p>Organize insights, manage personas, and leverage AI to extract research findings</p>
+</div>
+
+<div class="filter-section">
+    <h3>📊 Quick Stats</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+        <div style="padding: 1rem; background: #f5f7fa; border-radius: 4px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--royal-blue);">{{ insights_count }}</div>
+            <div style="color: #666;">Total Insights</div>
+        </div>
+        <div style="padding: 1rem; background: #f5f7fa; border-radius: 4px;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--sky-blue);">{{ personas_count }}</div>
+            <div style="color: #666;">Personas</div>
+        </div>
+    </div>
+</div>
+
+<h2>Recent Insights</h2>
+{% if recent_insights %}
+<div class="insights-list">
+    {% for insight in recent_insights %}
+    <div class="insight-item">
+        <h4>{{ insight.title }}</h4>
+        <p style="color: #666;">{{ insight.description[:100] }}...</p>
+        {% if insight.persona_id %}
+        <span class="chip">{{ insight.persona_name }}</span>
+        {% endif %}
+        {% if insight.journey_stage %}
+        <span class="chip">{{ insight.journey_stage }}</span>
+        {% endif %}
+        <div class="meta">Created: {{ insight.timestamp }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No insights yet. <a href="/insights" style="color: var(--royal-blue);">Create one!</a></p>
+</div>
+{% endif %}
+{% endblock %}
