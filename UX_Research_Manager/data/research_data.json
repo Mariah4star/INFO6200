@@ -26,6 +26,15 @@
       "journey_stage": "Awareness",
       "timestamp": "2026-02-06T14:39:26.791327",
       "ai_summary": "**Key Findings:**\n\n1. **User Engagement:** Susan is enjoying the app and is actively engaged with it.\n2. **Usability Issues:** Susan is struggling to figure out certain aspects of the app.\n3. **Bugs:** Susan has encountered a few bugs while using the app.\n\n**Actionable Insights for UX Designers:**\n\n1. **Improve Onboarding and Navigation:** Address Susan's struggles by simplifying the onboarding process and improving navigation. Ensure that key features are easily discoverable and intuitive to use.\n2. **Conduct Usability Testing:** Identify specific areas where Susan is struggling and conduct usability testing to gather more insights. This will help in refining the user interface and overall user experience.\n3. **Bug Fixing:** Prioritize fixing the bugs that Susan encountered. Ensure that the app is stable and functions as expected to provide a seamless user experience.\n4. **Gather Feedback:** Continue to gather feedback from Susan and other users to identify areas for improvement and make iterative enhancements to the app."
+    },
+    {
+      "id": 7,
+      "title": "API Test Insight",
+      "description": "Created via Flask API",
+      "persona_id": 1,
+      "journey_stage": null,
+      "timestamp": "2026-02-10T11:12:35.514856",
+      "ai_summary": null
     }
   ],
   "personas": [

@@ -693,6 +693,50 @@ data_store = DataStore()
 ai_assistant = AIAssistant()
 
 
+@flask_app.route('/')
+def index():
+    """Root route - Welcome page."""
+    return """
+    <html>
+        <head>
+            <title>UX Research Manager</title>
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    max-width: 800px; 
+                    margin: 50px auto; 
+                    padding: 20px;
+                    background-color: #f5f5f5;
+                }
+                h1 { color: #5B72E3; }
+                .api-list { background: white; padding: 20px; border-radius: 8px; }
+                code { background: #e9ecef; padding: 2px 6px; border-radius: 3px; }
+            </style>
+        </head>
+        <body>
+            <h1>🎯 UX Research Manager</h1>
+            <p>Welcome to the UX Research Manager API!</p>
+            <div class="api-list">
+                <h2>Available Endpoints:</h2>
+                <ul>
+                    <li><code>GET /api/insights</code> - List all insights</li>
+                    <li><code>POST /api/insights</code> - Create new insight</li>
+                    <li><code>GET /api/insights/{id}</code> - Get specific insight</li>
+                    <li><code>PUT /api/insights/{id}</code> - Update insight</li>
+                    <li><code>DELETE /api/insights/{id}</code> - Delete insight</li>
+                    <li><code>GET /api/personas</code> - List all personas</li>
+                    <li><code>POST /api/personas</code> - Create new persona</li>
+                    <li><code>GET /api/personas/{id}</code> - Get specific persona</li>
+                    <li><code>PUT /api/personas/{id}</code> - Update persona</li>
+                    <li><code>DELETE /api/personas/{id}</code> - Delete persona</li>
+                    <li><code>POST /api/summarize</code> - Generate AI summary</li>
+                </ul>
+            </div>
+        </body>
+    </html>
+    """
+
+
 @flask_app.route('/api/insights', methods=['GET'])
 def get_insights():
     """Get all insights."""
