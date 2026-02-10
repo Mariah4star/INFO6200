@@ -1,33 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>User Personas</h1>
-
-<div style="margin-bottom: 2rem;">
-    <button class="btn btn-success" onclick="window.location.href='/personas/new'">+ New Persona</button>
-</div>
-
-{% if personas %}
-<div class="personas-list">
-    {% for persona in personas %}
-    <div class="persona-item">
-        <h4><a href="/personas/{{ persona.id }}" style="color: var(--royal-blue); text-decoration: none;">{{ persona.name }}</a></h4>
-        <p>{{ persona.description[:150] }}{% if persona.description|length > 150 %}...{% endif %}</p>
-        <div class="meta">Created: {{ persona.timestamp }}</div>
-        <div style="margin-top: 0.5rem;">
-            <button class="btn" onclick="window.location.href='/personas/{{ persona.id }}'" style="background-color: var(--medium-blue);">View</button>
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="/personas" style="color: var(--royal-blue); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Personas</a>
+    
+    <div class="card">
+        <h1 style="margin-top: 0;">{{ persona.name }}</h1>
+        
+        <div class="meta" style="margin: 1rem 0;">Created: {{ persona.timestamp }}</div>
+        
+        <h2>Description</h2>
+        <p style="line-height: 1.6; white-space: pre-wrap;">{{ persona.description }}</p>
+        
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
             <button class="btn btn-secondary" onclick="editPersona('{{ persona.id }}')">Edit</button>
             <button class="btn" onclick="deletePersona('{{ persona.id }}')" style="background-color: #e74c3c;">Delete</button>
         </div>
     </div>
-    {% endfor %}
 </div>
-{% else %}
-<div class="empty-state">
-    <p>No personas created yet.</p>
-    <button class="btn" onclick="window.location.href='/personas/new'">Create Your First Persona</button>
-</div>
-{% endif %}
 
 <script>
 function editPersona(id) {
@@ -45,7 +35,7 @@ function deletePersona(id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                window.location.href = '/personas';
             } else {
                 alert('Error: ' + data.message);
             }

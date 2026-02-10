@@ -151,6 +151,58 @@ def personas():
         personas=personas_list
     )
 
+@app.route('/personas/<int:persona_id>')
+def view_persona(persona_id):
+    """View a single persona with full details."""
+    persona = data_store.get_persona(persona_id)
+    if not persona:
+        return "Persona not found", 404
+    
+    return render_template(
+        'persona_detail.html',
+        colors=COLORS,
+        persona=persona
+    )
+
+@app.route('/personas/<int:persona_id>/edit', methods=['GET', 'POST'])
+def edit_persona(persona_id):
+    """Edit a persona."""
+    persona = data_store.get_persona(persona_id)
+    if not persona:
+        return "Persona not found", 404
+    
+    if request.method == 'POST':
+        # Handle form submission
+        try:
+            name = request.form.get('name')
+            description = request.form.get('description')
+            
+            # Update the persona
+            data_store.update_persona(persona_id, name=name, description=description)
+            
+            return redirect(url_for('view_persona', persona_id=persona_id))
+        except Exception as e:
+            return f"Error updating persona: {str(e)}", 400
+    
+    # GET request - show edit form
+    return render_template(
+        'edit_persona.html',
+        colors=COLORS,
+        persona=persona
+    )
+
+@app.route('/personas/<int:persona_id>/delete', methods=['POST'])
+def delete_persona(persona_id):
+    """Delete a persona."""
+    try:
+        success = data_store.delete_persona(persona_id)
+        if success:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'message': 'Persona not found'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+
 @app.route('/about')
 def about():
     """About page."""

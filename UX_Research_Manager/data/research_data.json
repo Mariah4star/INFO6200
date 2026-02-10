@@ -71,6 +71,12 @@
       "name": "Mary",
       "description": "Shy but kind woman in her 20s. Willing to try and test, but isn't confident in her tech skills. Honest in her feedback and great at eye testing.",
       "timestamp": "2026-02-10T13:15:27.130132"
+    },
+    {
+      "id": 6,
+      "name": "Delete me",
+      "description": "Testing delete",
+      "timestamp": "2026-02-10T13:36:34.837386"
     }
   ]
 }
