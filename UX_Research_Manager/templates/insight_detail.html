@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="/insights" style="color: var(--royal-blue); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Insights</a>
+    
+    <div class="card">
+        <h1 style="margin-top: 0;">{{ insight.title }}</h1>
+        
+        {% if insight.persona_id %}
+        <span class="chip">{{ insight.persona_name }}</span>
+        {% endif %}
+        {% if insight.journey_stage %}
+        <span class="chip">{{ insight.journey_stage }}</span>
+        {% endif %}
+        
+        <div class="meta" style="margin: 1rem 0;">Created: {{ insight.timestamp }}</div>
+        
+        <h2>Description</h2>
+        <p style="line-height: 1.6; white-space: pre-wrap;">{{ insight.description }}</p>
+        
+        {% if insight.ai_summary %}
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border-left: 4px solid var(--bright-turquoise);">
+            <h2 style="margin-top: 0; color: var(--bright-turquoise);">🤖 AI Summary</h2>
+            <p style="line-height: 1.6; white-space: pre-wrap;">{{ insight.ai_summary }}</p>
+        </div>
+        {% else %}
+        <div style="margin-top: 2rem;">
+            <button class="btn btn-ai" onclick="generateSummary('{{ insight.id }}')">Generate AI Summary</button>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="editInsight('{{ insight.id }}')">Edit</button>
+            <button class="btn" onclick="deleteInsight('{{ insight.id }}')" style="background-color: #e74c3c;">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function generateSummary(id) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    
+    fetch(`/api/insights/${id}/summarize`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+            btn.disabled = false;
+            btn.textContent = 'Generate AI Summary';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error generating summary');
+        btn.disabled = false;
+        btn.textContent = 'Generate AI Summary';
+    });
+}
+
+function editInsight(id) {
+    alert('Edit feature coming soon: Insight ' + id);
+}
+
+function deleteInsight(id) {
+    if (confirm('Are you sure?')) {
+        alert('Delete feature coming soon: Insight ' + id);
+    }
+}
+</script>
+{% endblock %}

@@ -7,7 +7,8 @@
       "persona_id": 1,
       "journey_stage": "Awareness",
       "timestamp": "2026-02-04T16:55:37.077517",
-      "ai_summary": "**Key Findings:**\n\n1. **Cognitive Flow Disruption**: Users find the current design disruptive to their thought process and workflow.\n2. **Color Scheme Issues**: The existing color palette is causing visual discomfort and headaches.\n\n**Actionable Insights for UX Designers:**\n\n1. **Improve Information Architecture**: Restructure the layout to support users' mental models and cognitive flow. Group related tasks and information together, and ensure a logical progression through the interface.\n2. **Revise Color Scheme**: Choose a color palette that is visually comfortable and accessible. Consider using tools like color contrast checkers and consulting color accessibility guidelines (e.g., WCAG). Conduct user testing to validate the new color scheme.\n3. **Prioritize User Comfort**: Ensure the design is not causing physical or mental strain. This includes considering factors like readability, spacing, and overall visual hierarchy."
+      "ai_summary": "**Key Findings:**\n\n1. **Cognitive Flow Disruption**: Users find the current design disruptive to their thought process and workflow.\n2. **Color Scheme Issues**: The existing color palette is causing visual discomfort and headaches.\n\n**Actionable Insights for UX Designers:**\n\n1. **Improve Information Architecture**: Restructure the layout to support users' mental models and cognitive flow. Group related tasks and information together, and ensure a logical progression through the interface.\n2. **Revise Color Scheme**: Choose a color palette that is visually comfortable and accessible. Consider using tools like color contrast checkers and consulting color accessibility guidelines (e.g., WCAG). Conduct user testing to validate the new color scheme.\n3. **Prioritize User Comfort**: Ensure the design is not causing physical or mental strain. This includes considering factors like readability, spacing, and overall visual hierarchy.",
+      "persona_name": "Joe"
     },
     {
       "id": 5,
@@ -16,7 +17,8 @@
       "persona_id": 2,
       "journey_stage": "Awareness",
       "timestamp": "2026-02-05T14:38:44.870998",
-      "ai_summary": "**Research Notes Summary:**\n\n1. **Understanding Elliptical Curves (EC):**\n   - EC are defined by the equation y\u00b2 = x\u00b3 + ax + b, with specific conditions.\n   - They offer a more secure and efficient alternative to traditional methods like RSA for encryption and cybersecurity.\n\n2. **Elliptical Curve Cryptography (ECC):**\n   - ECC is a public-key cryptography system based on EC.\n   - It provides equivalent security with smaller key sizes compared to RSA.\n\n3. **Key Features of ECC:**\n   - **Smaller Key Sizes:** ECC uses smaller key sizes (e.g., 256-bit ECC key \u2248 3072-bit RSA key) for similar security levels.\n   - **Faster Computations:** ECC offers faster computations and reduced power consumption.\n   - **Scalability:** ECC is highly scalable and suitable for resource-constrained environments.\n\n4. **Applications of ECC:**\n   - **Encryption:** ECC can be used for symmetric encryption (e.g., ECDH - Elliptic Curve Diffie-Hellman).\n   - **Digital Signatures:** ECC supports digital signatures (e.g., ECDSA - Elliptic Curve Digital Signature Algorithm).\n   - **Key Exchange:** ECC enables secure key exchange protocols.\n\n5. **Challenges and Considerations:**\n   - **Implementation:** Proper implementation is crucial to avoid vulnerabilities.\n   - **Standardization:** Follow established standards like NIST, SECG, or RFCs.\n   - **Side-Channel Attacks:** Be aware of and mitigate side-channel attacks.\n\n**Actionable Insights for UX Designers:**\n\n1. **Educate Users:** Provide clear, concise information about the benefits and security aspects of ECC.\n2. **Simplify Key Management:** Design intuitive interfaces for key generation, storage, and management.\n3. **Ensure Transparency:** Clearly communicate the use of ECC in encryption and security processes.\n4. **Prioritize Usability:** Make ECC-based security features easy to use and understand for all user levels.\n5. **Address Concerns:** Acknowledge and address potential user concerns about ECC and its implementation.\n6. **Stay Updated:** Keep abreast of the latest developments and standards in ECC to ensure ongoing security and usability."
+      "ai_summary": "**Research Notes Summary:**\n\n1. **Understanding Elliptical Curves (EC):**\n   - EC are defined by the equation y\u00b2 = x\u00b3 + ax + b, with specific conditions.\n   - They offer a more secure and efficient alternative to traditional methods like RSA for encryption and cybersecurity.\n\n2. **Elliptical Curve Cryptography (ECC):**\n   - ECC is a public-key cryptography system based on EC.\n   - It provides equivalent security with smaller key sizes compared to RSA.\n\n3. **Key Features of ECC:**\n   - **Smaller Key Sizes:** ECC uses smaller key sizes (e.g., 256-bit ECC key \u2248 3072-bit RSA key) for similar security levels.\n   - **Faster Computations:** ECC offers faster computations and reduced power consumption.\n   - **Scalability:** ECC is highly scalable and suitable for resource-constrained environments.\n\n4. **Applications of ECC:**\n   - **Encryption:** ECC can be used for symmetric encryption (e.g., ECDH - Elliptic Curve Diffie-Hellman).\n   - **Digital Signatures:** ECC supports digital signatures (e.g., ECDSA - Elliptic Curve Digital Signature Algorithm).\n   - **Key Exchange:** ECC enables secure key exchange protocols.\n\n5. **Challenges and Considerations:**\n   - **Implementation:** Proper implementation is crucial to avoid vulnerabilities.\n   - **Standardization:** Follow established standards like NIST, SECG, or RFCs.\n   - **Side-Channel Attacks:** Be aware of and mitigate side-channel attacks.\n\n**Actionable Insights for UX Designers:**\n\n1. **Educate Users:** Provide clear, concise information about the benefits and security aspects of ECC.\n2. **Simplify Key Management:** Design intuitive interfaces for key generation, storage, and management.\n3. **Ensure Transparency:** Clearly communicate the use of ECC in encryption and security processes.\n4. **Prioritize Usability:** Make ECC-based security features easy to use and understand for all user levels.\n5. **Address Concerns:** Acknowledge and address potential user concerns about ECC and its implementation.\n6. **Stay Updated:** Keep abreast of the latest developments and standards in ECC to ensure ongoing security and usability.",
+      "persona_name": "Phil"
     },
     {
       "id": 6,
@@ -25,7 +27,8 @@
       "persona_id": 3,
       "journey_stage": "Awareness",
       "timestamp": "2026-02-06T14:39:26.791327",
-      "ai_summary": "**Key Findings:**\n\n1. **User Engagement:** Susan is enjoying the app and is actively engaged with it.\n2. **Usability Issues:** Susan is struggling to figure out certain aspects of the app.\n3. **Bugs:** Susan has encountered a few bugs while using the app.\n\n**Actionable Insights for UX Designers:**\n\n1. **Improve Onboarding and Navigation:** Address Susan's struggles by simplifying the onboarding process and improving navigation. Ensure that key features are easily discoverable and intuitive to use.\n2. **Conduct Usability Testing:** Identify specific areas where Susan is struggling and conduct usability testing to gather more insights. This will help in refining the user interface and overall user experience.\n3. **Bug Fixing:** Prioritize fixing the bugs that Susan encountered. Ensure that the app is stable and functions as expected to provide a seamless user experience.\n4. **Gather Feedback:** Continue to gather feedback from Susan and other users to identify areas for improvement and make iterative enhancements to the app."
+      "ai_summary": "**Key Findings:**\n\n1. **User Engagement:** Susan is enjoying the app and is actively engaged with it.\n2. **Usability Issues:** Susan is struggling to figure out certain aspects of the app.\n3. **Bugs:** Susan has encountered a few bugs while using the app.\n\n**Actionable Insights for UX Designers:**\n\n1. **Improve Onboarding and Navigation:** Address Susan's struggles by simplifying the onboarding process and improving navigation. Ensure that key features are easily discoverable and intuitive to use.\n2. **Conduct Usability Testing:** Identify specific areas where Susan is struggling and conduct usability testing to gather more insights. This will help in refining the user interface and overall user experience.\n3. **Bug Fixing:** Prioritize fixing the bugs that Susan encountered. Ensure that the app is stable and functions as expected to provide a seamless user experience.\n4. **Gather Feedback:** Continue to gather feedback from Susan and other users to identify areas for improvement and make iterative enhancements to the app.",
+      "persona_name": "Susan"
     },
     {
       "id": 7,
@@ -34,7 +37,18 @@
       "persona_id": 1,
       "journey_stage": null,
       "timestamp": "2026-02-10T11:12:35.514856",
-      "ai_summary": null
+      "ai_summary": "**Research Notes:**\n\n1. **User Feedback on Current Interface:**\n   - Users find the current interface cluttered and confusing.\n   - Navigation is not intuitive, with users struggling to find key features.\n   - Color scheme is harsh and not accessible to users with visual impairments.\n\n2. **User Testing Results:**\n   - Task completion rate is low (65%), with many users failing to complete primary tasks.\n   - Users expressed frustration with the lack of clear instructions and feedback.\n   - Users appreciated the speed of the interface but found it unresponsive at times.\n\n3. **Competitor Analysis:**\n   - Competitors offer cleaner, more intuitive interfaces with better navigation.\n   - Competitors provide clear instructions and feedback, leading to higher task completion rates (85%+).\n   - Competitors use more accessible color schemes and offer customization options.\n\n4. **User Needs and Pain Points:**\n   - Users need a clear, intuitive interface with easy navigation.\n   - Users want clear instructions and feedback to guide them through tasks.\n   - Users desire a more visually appealing and accessible interface.\n\n**Actionable Insights for UX Designers:**\n\n1. **Simplify and Improve Navigation:**\n   - Redesign the interface to reduce clutter and improve navigation.\n   - Implement a clear, intuitive menu structure to help users find key features easily.\n\n2. **Enhance Usability:**\n   - Provide clear instructions and feedback to guide users through tasks.\n   - Ensure the interface is responsive and addresses any performance issues.\n\n3. **Improve Visual Design and Accessibility:**\n   - Adopt a more visually appealing color scheme that is accessible to all users.\n   - Consider offering customization options to cater to diverse user preferences.\n\n4. **Incorporate User-Centered Design Principles:**\n   - Prioritize user needs and pain points in the design process.\n   - Conduct user testing to gather feedback and iterate on the design.\n\nBy addressing these insights, UX designers can create a more intuitive, user-friendly interface that meets user needs and outperforms competitors.",
+      "persona_name": "Joe"
+    },
+    {
+      "id": 8,
+      "title": "Mary testing the app",
+      "description": "Mary is testing our app and is rocking it. She has a few hesitations about finding everything, but in the end does. ",
+      "persona_id": 5,
+      "journey_stage": "Awareness",
+      "timestamp": "2026-02-10T13:16:22.574564",
+      "ai_summary": "Error generating summary: 'AIAssistant' object has no attribute 'analyze_insight'",
+      "persona_name": "Mary"
     }
   ],
   "personas": [
@@ -55,6 +69,18 @@
       "name": "Susan",
       "description": "Woman in her 40s who enjoys online shopping and has basic tech skills. She enjoys learning new things and willing to try just about anything.",
       "timestamp": "2026-02-06T14:38:28.588559"
+    },
+    {
+      "id": 4,
+      "name": "Fred",
+      "description": "Red-haired twin with a lot of spunk. He doesn't have any tech experience but is excited to learn and try new things. Willing to try whatever whenever.",
+      "timestamp": "2026-02-10T13:13:37.028425"
+    },
+    {
+      "id": 5,
+      "name": "Mary",
+      "description": "Shy but kind woman in her 20s. Willing to try and test, but isn't confident in her tech skills. Honest in her feedback and great at eye testing.",
+      "timestamp": "2026-02-10T13:15:27.130132"
     }
   ]
 }

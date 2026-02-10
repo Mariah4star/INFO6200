@@ -29,8 +29,8 @@
 <div class="insights-list">
     {% for insight in insights %}
     <div class="insight-item">
-        <h4>{{ insight.title }}</h4>
-        <p>{{ insight.description }}</p>
+        <h4><a href="/insights/{{ insight.id }}" style="color: var(--royal-blue); text-decoration: none;">{{ insight.title }}</a></h4>
+        <p>{{ insight.description[:150] }}{% if insight.description|length > 150 %}...{% endif %}</p>
         {% if insight.persona_id %}
         <span class="chip">{{ insight.persona_name }}</span>
         {% endif %}
@@ -40,11 +40,17 @@
         {% if insight.ai_summary %}
         <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--soft-blue);">
             <strong style="color: var(--bright-turquoise);">🤖 AI Summary:</strong>
-            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">{{ insight.ai_summary[:200] }}...</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">{{ insight.ai_summary[:200] }}{% if insight.ai_summary|length > 200 %}...{% endif %}</p>
+            <a href="/insights/{{ insight.id }}" style="color: var(--bright-turquoise); font-size: 0.9rem;">View full summary →</a>
+        </div>
+        {% else %}
+        <div style="margin-top: 0.5rem;">
+            <button class="btn btn-ai" onclick="generateSummary('{{ insight.id }}')">Generate AI Summary</button>
         </div>
         {% endif %}
         <div class="meta">Created: {{ insight.timestamp }}</div>
         <div style="margin-top: 0.5rem;">
+            <button class="btn" onclick="window.location.href='/insights/{{ insight.id }}'" style="background-color: var(--medium-blue);">View</button>
             <button class="btn btn-secondary" onclick="editInsight('{{ insight.id }}')">Edit</button>
             <button class="btn" onclick="deleteInsight('{{ insight.id }}')" style="background-color: #e74c3c;">Delete</button>
         </div>
@@ -62,6 +68,37 @@
 function filterInsights() {
     // TODO: Implement filtering
     console.log('Filtering insights...');
+}
+
+function generateSummary(id) {
+    // Send AJAX request to generate summary
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    
+    fetch(`/api/insights/${id}/summarize`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload the page to show the new summary
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+            btn.disabled = false;
+            btn.textContent = 'Generate AI Summary';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error generating summary');
+        btn.disabled = false;
+        btn.textContent = 'Generate AI Summary';
+    });
 }
 
 function editInsight(id) {

@@ -70,6 +70,24 @@ def insights():
         personas=personas
     )
 
+@app.route('/insights/<int:insight_id>')
+def view_insight(insight_id):
+    """View a single insight with full details."""
+    insight = data_store.get_insight(insight_id)
+    if not insight:
+        return "Insight not found", 404
+    
+    # Add persona name if exists
+    if insight['persona_id']:
+        persona = data_store.get_persona(insight['persona_id'])
+        insight['persona_name'] = persona['name'] if persona else 'Unknown'
+    
+    return render_template(
+        'insight_detail.html',
+        colors=COLORS,
+        insight=insight
+    )
+
 @app.route('/personas')
 def personas():
     """View all personas."""
@@ -155,6 +173,25 @@ def create_persona():
         return redirect(url_for('personas'))
     except Exception as e:
         return f"Error creating persona: {str(e)}", 400
+
+@app.route('/api/insights/<insight_id>/summarize', methods=['POST'])
+def summarize_insight_api(insight_id):
+    """Generate AI summary for an insight via API."""
+    try:
+        # Get the insight
+        insight = data_store.get_insight(int(insight_id))
+        if not insight:
+            return jsonify({'success': False, 'message': 'Insight not found'}), 404
+        
+        # Generate summary
+        summary = ai_assistant.summarize_research(insight['description'])
+        
+        # Update the insight with the summary
+        data_store.update_insight(int(insight_id), ai_summary=summary)
+        
+        return jsonify({'success': True, 'summary': summary})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
