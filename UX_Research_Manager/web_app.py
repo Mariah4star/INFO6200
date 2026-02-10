@@ -237,8 +237,7 @@ def create_insight():
         # Get AI summary
         ai_summary = ''
         try:
-            ai_response = ai_assistant.analyze_insight(description)
-            ai_summary = ai_response
+            ai_summary = ai_assistant.summarize_research(description)
         except Exception as e:
             ai_summary = f"Error generating summary: {str(e)}"
         
@@ -300,4 +299,3 @@ def summarize_insight_api(insight_id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-

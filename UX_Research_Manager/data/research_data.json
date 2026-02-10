@@ -31,14 +31,13 @@
       "persona_name": "Susan"
     },
     {
-      "id": 8,
-      "title": "Mary testing the app",
+      "id": 9,
+      "title": "Mary Testing",
       "description": "Mary is testing our app and is rocking it. She has a few hesitations about finding everything, but in the end does. ",
       "persona_id": 5,
-      "journey_stage": "Awareness",
-      "timestamp": "2026-02-10T13:16:22.574564",
-      "ai_summary": "Error generating summary: 'AIAssistant' object has no attribute 'analyze_insight'",
-      "persona_name": "Mary"
+      "journey_stage": "Consideration",
+      "timestamp": "2026-02-10T16:48:40.523171",
+      "ai_summary": "Error generating summary: 'AIAssistant' object has no attribute 'analyze_insight'"
     }
   ],
   "personas": [
