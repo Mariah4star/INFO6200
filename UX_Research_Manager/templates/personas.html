@@ -15,7 +15,7 @@
         <p>{{ persona.description[:150] }}{% if persona.description|length > 150 %}...{% endif %}</p>
         <div class="meta">Created: {{ persona.timestamp }}</div>
         <div style="margin-top: 0.5rem;">
-            <button class="btn" onclick="window.location.href='/personas/{{ persona.id }}'" style="background-color: var(--medium-blue);">View</button>
+            <button class="btn btn-view" onclick="window.location.href='/personas/{{ persona.id }}'">View</button>
             <button class="btn btn-secondary" onclick="editPersona('{{ persona.id }}')">Edit</button>
             <button class="btn" onclick="deletePersona('{{ persona.id }}')" style="background-color: #e74c3c;">Delete</button>
         </div>

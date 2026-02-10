@@ -108,6 +108,15 @@ h2 {
     background-color: var(--bright-turquoise);
 }
 
+.btn-view {
+    background-color: var(--pink);
+}
+
+.btn-view:hover {
+    background-color: #d1337a;
+    box-shadow: 0 4px 8px rgba(236, 72, 153, 0.3);
+}
+
 /* Tags & Chips */
 .chip {
     display: inline-block;

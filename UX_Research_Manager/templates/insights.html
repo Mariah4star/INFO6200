@@ -50,7 +50,7 @@
         {% endif %}
         <div class="meta">Created: {{ insight.timestamp }}</div>
         <div style="margin-top: 0.5rem;">
-            <button class="btn" onclick="window.location.href='/insights/{{ insight.id }}'" style="background-color: var(--medium-blue);">View</button>
+            <button class="btn btn-view" onclick="window.location.href='/insights/{{ insight.id }}'">View</button>
             <button class="btn btn-secondary" onclick="editInsight('{{ insight.id }}')">Edit</button>
             <button class="btn" onclick="deleteInsight('{{ insight.id }}')" style="background-color: #e74c3c;">Delete</button>
         </div>
