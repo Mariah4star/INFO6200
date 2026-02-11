@@ -1,8 +1,8 @@
 """
-UX Research Manager - Web Interface (Chunk 3)
+UX Research Manager - Web Interface (Chunk 4)
 
-A Flask web application for the UX Research Manager with a filter-centric dashboard.
-Uses the Aquatic color palette for a calm, high-focus research environment.
+Replace command-line input with web-based forms that allow users to submit UX research data through a Flask web interface while continuing to use persistent JSON storage.
+
 """
 
 from flask import Flask, render_template, request, jsonify, url_for, redirect
