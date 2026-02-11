@@ -1,7 +1,7 @@
 """
-UX Research Manager - Web Interface (Chunk 4)
+UX Research Manager - Web Interface (Chunk 5)
 
-Replace command-line input with web-based forms that allow users to submit UX research data through a Flask web interface while continuing to use persistent JSON storage.
+Display all research insights and personas dynamically on the web using Jinja2 templates and persistent JSON storage.
 
 """
 
