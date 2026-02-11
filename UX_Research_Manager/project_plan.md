@@ -133,3 +133,32 @@ Introduce a minimal web interface using Flask as the first step in transitioning
 # Files to create:
 - web_app.py file containing the minimal Flask application
 
+## Chunk 4: Gathering User Data
+
+# Goal:
+Replace command-line input with web-based forms that allow users to submit UX research data through a Flask web interface while continuing to use persistent JSON storage.
+
+# Tasks: 
+1. Create Flask routes that render HTML forms from the templates folder for entering research insights and personas.
+2. Handle form submissions using POST requests and extract user input with request.form.
+3. Save submitted data to the persistent JSON file using the existing data model.
+
+# Files to create:
+- Updated web_app.py
+- templates/ directory with the HTML files used to display and submit forms
+
+## Chunk 5: Bringing Data to the Web
+
+# Goal: 
+Display all research insights and personas dynamically on the web using Jinja2 templates and persistent JSON storage.
+
+# Tasks: 
+1. Create Flask routes that load insights and personas from the JSON file.
+2. Pass the data to Jinja2 templates and use for loops to render each item in a readable HTML layout.
+3. Include links for viewing, editing, or deleting items while keeping the dashboard style consistent.
+
+# Files to create:
+- Updated web_app.py
+- templates/insights.html and templates/personas.html
+
+
