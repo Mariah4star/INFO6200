@@ -37,7 +37,17 @@
       "persona_id": 5,
       "journey_stage": "Decision",
       "timestamp": "2026-02-10T16:54:37.128491",
-      "ai_summary": "**Insight:** Users may initially struggle with navigation and discoverability within the app.\n\n**Actionable Implications for UX Designers:**\n1. **Improve Information Architecture:** Ensure that the app's structure and organization are intuitive and easy to understand. Consider using clear and consistent labeling, and group related features together.\n2. **Enhance Search Functionality:** Implement a robust search feature that allows users to quickly find what they're looking for. Include filters and sorting options to help users narrow down results.\n3. **Provide Clear Navigation Paths:** Use breadcrumbs, clear headings, and consistent navigation menus to help users understand where they are within the app and how to get to other sections.\n4. **Conduct Usability Testing:** Regularly test the app with users to identify any navigation or discoverability issues and make improvements accordingly."
+      "ai_summary": "**Insight:** Users may initially struggle with navigation and discoverability within the app.\n\n**Actionable Implications for UX Designers:**\n1. **Improve Information Architecture:** Ensure that the app's structure and organization are intuitive and easy to understand. Consider using clear and consistent labeling, and group related features together.\n2. **Enhance Search Functionality:** Implement a robust search feature that allows users to quickly find what they're looking for. Include filters and sorting options to help users narrow down results.\n3. **Provide Clear Navigation Paths:** Use breadcrumbs, clear headings, and consistent navigation menus to help users understand where they are within the app and how to get to other sections.\n4. **Conduct Usability Testing:** Regularly test the app with users to identify any navigation or discoverability issues and make improvements accordingly.",
+      "persona_name": "Mary"
+    },
+    {
+      "id": 11,
+      "title": "Phil is going crazy with all this testing \ud83d\ude2d",
+      "description": "Phil is struggling with all the testing and apps. He doesn't get what's going on, and researchers are ready to dismiss him.",
+      "persona_id": 2,
+      "journey_stage": "Awareness",
+      "timestamp": "2026-02-10T18:10:54.569749",
+      "ai_summary": "**Key Insight:**\n- **User Confusion:** Phil, a participant in the study, is struggling with the testing process and various apps, indicating a lack of intuitiveness and user-friendliness in the current design.\n\n**Actionable Implications for UX Designers:**\n1. **Simplify Onboarding:** Streamline the testing process and app interfaces to make them more intuitive and easier to navigate.\n2. **Improve User Guidance:** Provide clear instructions, tooltips, or walkthroughs to help users understand the purpose and functionality of each app.\n3. **User Empathy:** Avoid dismissing users who struggle; instead, use their feedback to identify pain points and areas for improvement.\n4. **Usability Testing:** Conduct further usability tests to identify specific points of confusion and refine the design accordingly."
     }
   ],
   "personas": [
