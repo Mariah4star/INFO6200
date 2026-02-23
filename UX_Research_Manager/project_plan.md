@@ -161,4 +161,25 @@ Display all research insights and personas dynamically on the web using Jinja2 t
 - Updated web_app.py
 - templates/insights.html and templates/personas.html
 
+## Chunk 6: Data Migration
+
+# Goal: 
+Refactor the application’s backend to replace the JSON file with a robust SQL database using SQLAlchemy, enabling structured, persistent storage for insights and personas, while keeping AI-assisted research summarization functional.
+
+# Tasks: 
+1. Define SQLAlchemy models that match the existing data structures for research insights and personas.
+2. Configure the Flask application to connect to an SQLite database (or another SQL database compatible with Heroku and future AWS deployment).
+3. Refactor "add" and "list" functionality to create, commit, and query records via SQLAlchemy instead of reading/writing the JSON file.
+4. Make sure that the AI-assisted features (e.g., research summarization) continue to function with the new database.
+5. Make sure that administrators and developers can access and manage the database easily
+
+# Core Files:
+- Updated web_app.py with SQLAlchemy integration
+- New Python files with database models
+- The SQLite database file (project.db)
+
+# Note: 
+ With the deployment of this app, I want to have the most seamless SQL database experience. I am planning on initially launching with Heroku because of cost and simplicity. Choose the database system that will integrate best with Heroku and allow for the eventual migration to AWS.
+
+
 
