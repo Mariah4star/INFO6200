@@ -1,18 +1,28 @@
 """
-UX Research Manager - Web Interface (Chunk 5)
+UX Research Manager - Web Interface (Chunk 6)
 
-Display all research insights and personas dynamically on the web using Jinja2 templates and persistent JSON storage.
-
+SQLAlchemy-based web application with robust SQL database storage.
+Compatible with SQLite (local) and PostgreSQL (Heroku/AWS).
 """
 
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-from UXRM import data_store, ai_assistant
+from models import db, Persona, Insight
+from config import Config
+from UXRM import ai_assistant
 from datetime import datetime
 
 app = Flask(__name__, 
             template_folder='templates',
             static_folder='static',
             static_url_path='/static')
+
+# Configure database
+app.config.from_object(Config)
+db.init_app(app)
+
+# Create tables if they don't exist
+with app.app_context():
+    db.create_all()
 
 # Aquatic Color Palette
 COLORS = {
@@ -31,16 +41,13 @@ COLORS = {
 @app.route('/')
 def dashboard():
     """Dashboard home page."""
-    insights = data_store.get_all_insights()
-    personas = data_store.get_all_personas()
+    insights = Insight.query.order_by(Insight.timestamp.desc()).all()
+    personas = Persona.query.all()
     
-    # Add persona names to insights
+    # Get recent insights with persona names
     recent_insights = []
-    for insight in insights[-3:]:  # Last 3 insights
-        insight_dict = dict(insight)
-        if insight['persona_id']:
-            persona = data_store.get_persona(insight['persona_id'])
-            insight_dict['persona_name'] = persona['name'] if persona else 'Unknown'
+    for insight in insights[:3]:  # First 3 (most recent)
+        insight_dict = insight.to_dict()
         recent_insights.append(insight_dict)
     
     return render_template(
@@ -54,153 +61,140 @@ def dashboard():
 @app.route('/insights')
 def insights():
     """View all insights."""
-    insights_list = data_store.get_all_insights()
-    personas = data_store.get_all_personas()
+    insights_list = Insight.query.order_by(Insight.timestamp.desc()).all()
+    personas_list = Persona.query.all()
     
-    # Add persona names to insights
-    for insight in insights_list:
-        if insight['persona_id']:
-            persona = data_store.get_persona(insight['persona_id'])
-            insight['persona_name'] = persona['name'] if persona else 'Unknown'
+    # Convert to dictionaries for template
+    insights_data = [insight.to_dict() for insight in insights_list]
+    personas_data = [persona.to_dict() for persona in personas_list]
     
     return render_template(
         'insights.html',
         colors=COLORS,
-        insights=insights_list,
-        personas=personas
+        insights=insights_data,
+        personas=personas_data
     )
 
 @app.route('/insights/<int:insight_id>')
 def view_insight(insight_id):
     """View a single insight with full details."""
-    insight = data_store.get_insight(insight_id)
-    if not insight:
-        return "Insight not found", 404
-    
-    # Add persona name if exists
-    if insight['persona_id']:
-        persona = data_store.get_persona(insight['persona_id'])
-        insight['persona_name'] = persona['name'] if persona else 'Unknown'
+    insight = Insight.query.get_or_404(insight_id)
     
     return render_template(
         'insight_detail.html',
         colors=COLORS,
-        insight=insight
+        insight=insight.to_dict()
     )
 
 @app.route('/insights/<int:insight_id>/edit', methods=['GET', 'POST'])
 def edit_insight(insight_id):
     """Edit an insight."""
-    insight = data_store.get_insight(insight_id)
-    if not insight:
-        return "Insight not found", 404
+    insight = Insight.query.get_or_404(insight_id)
     
     if request.method == 'POST':
         # Handle form submission
         try:
-            title = request.form.get('title')
-            description = request.form.get('description')
+            insight.title = request.form.get('title')
+            insight.description = request.form.get('description')
+            
+            # Handle persona_id
             persona_id = request.form.get('persona_id')
+            insight.persona_id = int(persona_id) if persona_id else None
+            
+            # Handle journey_stage
             journey_stage = request.form.get('journey_stage')
+            insight.journey_stage = journey_stage if journey_stage else None
             
-            # Convert empty strings to None
-            persona_id = int(persona_id) if persona_id else None
-            journey_stage = journey_stage if journey_stage else None
-            
-            # Update the insight
-            data_store.update_insight(
-                insight_id,
-                title=title,
-                description=description,
-                persona_id=persona_id,
-                journey_stage=journey_stage
-            )
+            db.session.commit()
             
             return redirect(url_for('view_insight', insight_id=insight_id))
         except Exception as e:
+            db.session.rollback()
             return f"Error updating insight: {str(e)}", 400
     
     # GET request - show edit form
-    personas_list = data_store.get_all_personas()
+    personas_list = Persona.query.all()
     return render_template(
         'edit_insight.html',
         colors=COLORS,
-        insight=insight,
-        personas=personas_list
+        insight=insight.to_dict(),
+        personas=[p.to_dict() for p in personas_list]
     )
 
 @app.route('/insights/<int:insight_id>/delete', methods=['POST'])
 def delete_insight(insight_id):
     """Delete an insight."""
     try:
-        success = data_store.delete_insight(insight_id)
-        if success:
-            return jsonify({'success': True})
-        else:
+        insight = Insight.query.get(insight_id)
+        if not insight:
             return jsonify({'success': False, 'message': 'Insight not found'}), 404
+        
+        db.session.delete(insight)
+        db.session.commit()
+        return jsonify({'success': True})
     except Exception as e:
+        db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 400
 
 @app.route('/personas')
 def personas():
     """View all personas."""
-    personas_list = data_store.get_all_personas()
+    personas_list = Persona.query.order_by(Persona.timestamp.desc()).all()
     return render_template(
         'personas.html',
         colors=COLORS,
-        personas=personas_list
+        personas=[p.to_dict() for p in personas_list]
     )
 
 @app.route('/personas/<int:persona_id>')
 def view_persona(persona_id):
     """View a single persona with full details."""
-    persona = data_store.get_persona(persona_id)
-    if not persona:
-        return "Persona not found", 404
+    persona = Persona.query.get_or_404(persona_id)
     
     return render_template(
         'persona_detail.html',
         colors=COLORS,
-        persona=persona
+        persona=persona.to_dict()
     )
 
 @app.route('/personas/<int:persona_id>/edit', methods=['GET', 'POST'])
 def edit_persona(persona_id):
     """Edit a persona."""
-    persona = data_store.get_persona(persona_id)
-    if not persona:
-        return "Persona not found", 404
+    persona = Persona.query.get_or_404(persona_id)
     
     if request.method == 'POST':
         # Handle form submission
         try:
-            name = request.form.get('name')
-            description = request.form.get('description')
+            persona.name = request.form.get('name')
+            persona.description = request.form.get('description')
             
-            # Update the persona
-            data_store.update_persona(persona_id, name=name, description=description)
+            db.session.commit()
             
             return redirect(url_for('view_persona', persona_id=persona_id))
         except Exception as e:
+            db.session.rollback()
             return f"Error updating persona: {str(e)}", 400
     
     # GET request - show edit form
     return render_template(
         'edit_persona.html',
         colors=COLORS,
-        persona=persona
+        persona=persona.to_dict()
     )
 
 @app.route('/personas/<int:persona_id>/delete', methods=['POST'])
 def delete_persona(persona_id):
     """Delete a persona."""
     try:
-        success = data_store.delete_persona(persona_id)
-        if success:
-            return jsonify({'success': True})
-        else:
+        persona = Persona.query.get(persona_id)
+        if not persona:
             return jsonify({'success': False, 'message': 'Persona not found'}), 404
+        
+        db.session.delete(persona)
+        db.session.commit()
+        return jsonify({'success': True})
     except Exception as e:
+        db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 400
 
 @app.route('/about')
@@ -214,11 +208,11 @@ def about():
 @app.route('/insights/new')
 def new_insight():
     """Show form to create new insight."""
-    personas = data_store.get_all_personas()
+    personas_list = Persona.query.all()
     return render_template(
         'create_insight.html',
         colors=COLORS,
-        personas=personas
+        personas=[p.to_dict() for p in personas_list]
     )
 
 @app.route('/insights', methods=['POST'])
@@ -241,8 +235,8 @@ def create_insight():
         except Exception as e:
             ai_summary = f"Error generating summary: {str(e)}"
         
-        # Add the insight
-        data_store.add_insight(
+        # Create new insight
+        new_insight = Insight(
             title=title,
             description=description,
             persona_id=persona_id,
@@ -250,8 +244,12 @@ def create_insight():
             ai_summary=ai_summary
         )
         
+        db.session.add(new_insight)
+        db.session.commit()
+        
         return redirect(url_for('insights'))
     except Exception as e:
+        db.session.rollback()
         return f"Error creating insight: {str(e)}", 400
 
 @app.route('/personas/new')
@@ -269,13 +267,18 @@ def create_persona():
         name = request.form.get('name')
         description = request.form.get('description')
         
-        data_store.add_persona(
+        # Create new persona
+        new_persona = Persona(
             name=name,
             description=description
         )
         
+        db.session.add(new_persona)
+        db.session.commit()
+        
         return redirect(url_for('personas'))
     except Exception as e:
+        db.session.rollback()
         return f"Error creating persona: {str(e)}", 400
 
 @app.route('/api/insights/<insight_id>/summarize', methods=['POST'])
@@ -283,18 +286,20 @@ def summarize_insight_api(insight_id):
     """Generate AI summary for an insight via API."""
     try:
         # Get the insight
-        insight = data_store.get_insight(int(insight_id))
+        insight = Insight.query.get(int(insight_id))
         if not insight:
             return jsonify({'success': False, 'message': 'Insight not found'}), 404
         
         # Generate summary
-        summary = ai_assistant.summarize_research(insight['description'])
+        summary = ai_assistant.summarize_research(insight.description)
         
         # Update the insight with the summary
-        data_store.update_insight(int(insight_id), ai_summary=summary)
+        insight.ai_summary = summary
+        db.session.commit()
         
         return jsonify({'success': True, 'summary': summary})
     except Exception as e:
+        db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 400
 
 if __name__ == '__main__':
