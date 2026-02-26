@@ -31,11 +31,13 @@ except ImportError:
 load_dotenv()
 
 # Try to import Mistral AI
+MISTRAL_IMPORT_ERROR = None
 try:
     from mistralai import Mistral
     MISTRAL_AVAILABLE = True
-except ImportError:
+except Exception as e:
     MISTRAL_AVAILABLE = False
+    MISTRAL_IMPORT_ERROR = str(e)
 
 # Data file paths (web-ready with environment variable override)
 DATA_DIR = Path(os.getenv("DATA_DIR", Path(__file__).parent / "data"))
@@ -193,8 +195,10 @@ class AIAssistant:
             AI-generated summary or warning message if API call fails
         """
         if not MISTRAL_AVAILABLE:
+            details = f" Import error: {MISTRAL_IMPORT_ERROR}" if MISTRAL_IMPORT_ERROR else ""
             return "[WARNING] Mistral AI is unavailable.\n" \
-                   "Please install the 'mistralai' package: pip install mistralai"
+                   "Please install the 'mistralai' package: pip install mistralai" \
+                   f"{details}"
         
         if not self.mistral_api_key:
             return "[WARNING] No Mistral API key configured. Skipping AI summarization.\n" \
