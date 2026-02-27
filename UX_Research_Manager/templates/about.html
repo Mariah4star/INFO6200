@@ -4,9 +4,10 @@
 <h1>About UX Research Manager</h1>
 
 <div class="card" style="max-width: 800px; margin: 0 auto;">
-    <h2>What is UX Research Manager?</h2>
-    <p>UX Research Manager is a tool designed to help UX designers and researchers organize, store, and analyze research insights in one place.</p>
-    
+    <h2>About the UX Research Manager</h2>
+    <p>The UX Research Manager is a simple tool designed to help teams organize, understand, and act on user research in one place. It allows researchers, designers, and developers to store UX insights, create personas, and summarize research notes so nothing gets lost during the design and development process.</p>
+    <p>The main goal of this app is to make user research more accessible and usable for businesses and product teams. By keeping research insights and personas organized, teams can make more informed design decisions, support user-centered thinking, and ensure that research findings are clearly communicated during developer handoff.</p>
+
     <h2>Core Features</h2>
     <ul style="margin-left: 2rem;">
         <li>📝 Create and manage research insights</li>
@@ -15,19 +16,68 @@
         <li>🤖 AI-powered research summarization</li>
         <li>💾 Persistent data storage</li>
     </ul>
-    
+
     <h2>Technology Stack</h2>
     <p>Built with Python, Flask, and powered by Mistral AI</p>
-    
+
+    <h2>How to Use the App (Step-by-Step)</h2>
+    <ol style="margin-left: 2rem;">
+        <li><strong>Start at the Dashboard</strong><br/>The dashboard gives you a quick overview of your UX research data and lets you navigate to insights or personas.</li>
+        <li><strong>Create UX Research Insights</strong><br/>Use the "Create Insight" page to add research findings from interviews, surveys, or usability tests. Each insight acts like a tag or reference point that can be revisited later during design decisions.</li>
+        <li><strong>Create and Manage Personas</strong><br/>Personas help represent key user types. You can create personas based on your research and update them as you learn more about your users.</li>
+        <li><strong>View and Edit Data</strong><br/>All insights and personas can be viewed, edited, or deleted at any time. This makes the app flexible as research evolves.</li>
+        <li><strong>Use AI Summaries (If Enabled)</strong><br/>When available, AI can help summarize longer research notes, making it easier to spot patterns and key takeaways.</li>
+    </ol>
+
+    <h2>Why This Matters for User Research &amp; Testing</h2>
+    <p>This app supports user research and usability testing by giving teams a centralized place to store findings. Instead of scattered notes or documents, research insights stay connected and easy to reference throughout the product lifecycle.</p>
+    <p>For businesses and companies, this means:</p>
+    <ul style="margin-left: 2rem;">
+        <li>Better alignment between research and design decisions</li>
+        <li>Easier collaboration between designers, researchers, and developers</li>
+        <li>Clear documentation that supports product improvements based on real user feedback</li>
+    </ul>
+
+    <h2>Supporting Developer Handoff</h2>
+    <p>By organizing UX insights and personas in a structured way, the app helps bridge the gap between design and development. Developers can easily understand user needs, assumptions, and research-backed decisions, leading to smoother handoffs and more user-centered implementations.</p>
+
     <h2>Color Palette</h2>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 1rem 0;">
-        {% for name, color in colors.items() %}
         <div style="text-align: center;">
-            <div style="width: 100%; height: 60px; background: {{ color }}; border-radius: 4px; margin-bottom: 0.5rem;"></div>
-            <small>{{ name.replace('_', ' ').title() }}</small><br/>
-            <code style="font-size: 0.8rem;">{{ color }}</code>
+            <div style="width: 100%; height: 60px; background: var(--royal-blue); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Royal Blue</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['royal_blue'] }}</code>
         </div>
-        {% endfor %}
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--medium-blue); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Medium Blue</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['medium_blue'] }}</code>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--bright-turquoise); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Bright Turquoise</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['bright_turquoise'] }}</code>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--sky-blue); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Sky Blue</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['sky_blue'] }}</code>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--pink); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Pink</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['pink'] }}</code>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--soft-blue); border-radius: 4px; margin-bottom: 0.5rem;"></div>
+            <small>Soft Blue</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['soft_blue'] }}</code>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 100%; height: 60px; background: var(--white); border-radius: 4px; margin-bottom: 0.5rem; border: 1px solid #ddd;"></div>
+            <small>White</small><br/>
+            <code style="font-size: 0.8rem;">{{ colors['white'] }}</code>
+        </div>
     </div>
 </div>
 {% endblock %}
