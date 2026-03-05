@@ -181,5 +181,19 @@ Refactor the application’s backend to replace the JSON file with a robust SQL 
 # Note: 
  With the deployment of this app, I want to have the most seamless SQL database experience. I am planning on initially launching with Heroku because of cost and simplicity. Choose the database system that will integrate best with Heroku and allow for the eventual migration to AWS.
 
+## Chunk 7: CRUD
+
+# Goal: 
+Make sure that full CRUD functionality for insights and personas through the web interface, allowing users to create, view, update, and delete entries easily.
+
+# Tasks: 
+1. Verify that dynamic editing forms display existing data correctly.
+2. Confirm delete functionality removes items and commits changes.
+3. Make sure that all CRUD actions are accessible through the web app.
+
+# Core Files:
+- web_app.py file 
+- Updated templates for edit forms and delete actions
+
 
 

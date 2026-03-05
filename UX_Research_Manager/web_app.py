@@ -1,8 +1,6 @@
 """
-UX Research Manager - Web Interface (Chunk 6)
+UX Research Manager - CRUD Update (Chunk 7)
 
-SQLAlchemy-based web application with robust SQL database storage.
-Compatible with SQLite (local) and PostgreSQL (Heroku/AWS).
 """
 
 from flask import Flask, render_template, request, jsonify, url_for, redirect
