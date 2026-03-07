@@ -7,8 +7,41 @@ Designed for SQLite (local) and PostgreSQL (Heroku/AWS).
 
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
+
+
+class User(db.Model):
+    """Application user model for authentication and data ownership."""
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    personas = db.relationship('Persona', backref='owner', lazy=True, cascade='all, delete-orphan')
+    insights = db.relationship('Insight', backref='owner', lazy=True, cascade='all, delete-orphan')
+
+    def set_password(self, password: str) -> None:
+        """Hash and store a password securely."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        """Validate a password against the stored hash."""
+        return check_password_hash(self.password_hash, password)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+    def __repr__(self):
+        return f'<User {self.id}: {self.email}>'
 
 
 class Persona(db.Model):
@@ -17,6 +50,7 @@ class Persona(db.Model):
     __tablename__ = 'personas'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -28,6 +62,7 @@ class Persona(db.Model):
         """Convert persona to dictionary for API responses."""
         return {
             'id': self.id,
+            'user_id': self.user_id,
             'name': self.name,
             'description': self.description,
             'timestamp': self.timestamp.isoformat() if self.timestamp else None
@@ -43,6 +78,7 @@ class Insight(db.Model):
     __tablename__ = 'insights'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     persona_id = db.Column(db.Integer, db.ForeignKey('personas.id'), nullable=True)
@@ -54,6 +90,7 @@ class Insight(db.Model):
         """Convert insight to dictionary for API responses."""
         return {
             'id': self.id,
+            'user_id': self.user_id,
             'title': self.title,
             'description': self.description,
             'persona_id': self.persona_id,
