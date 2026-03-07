@@ -42,6 +42,12 @@ nav a:hover {
     background-color: var(--medium-blue);
 }
 
+nav form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
 nav button {
     color: white;
     text-decoration: none;
@@ -53,6 +59,7 @@ nav button {
     cursor: pointer;
     font-size: inherit;
     font-family: inherit;
+    vertical-align: baseline;
 }
 
 nav button:hover {
