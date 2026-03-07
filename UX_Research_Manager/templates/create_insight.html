@@ -26,7 +26,7 @@
             {% if personas|length == 0 %}
             <p style="margin-top: 0.5rem; color: #666;">No personas yet. Create one first to link it to this insight.</p>
             {% endif %}
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='/personas/new?next=/insights/new'" style="margin-top: 0.5rem;">+ Create Persona</button>
+            <button type="button" class="btn btn-secondary" onclick="saveFormAndCreatePersona()" style="margin-top: 0.5rem;">+ Create Persona</button>
         </div>
         
         <div class="form-group">
@@ -47,4 +47,40 @@
         </div>
     </form>
 </div>
+
+<script>
+// Save form data to localStorage before navigating to create persona
+function saveFormAndCreatePersona() {
+    const formData = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        persona_id: document.getElementById('persona_id').value,
+        journey_stage: document.getElementById('journey_stage').value
+    };
+    localStorage.setItem('draftInsight', JSON.stringify(formData));
+    window.location.href = '/personas/new?next=/insights/new';
+}
+
+// Restore form data when page loads
+window.addEventListener('DOMContentLoaded', function() {
+    const draft = localStorage.getItem('draftInsight');
+    if (draft) {
+        try {
+            const formData = JSON.parse(draft);
+            document.getElementById('title').value = formData.title || '';
+            document.getElementById('description').value = formData.description || '';
+            document.getElementById('persona_id').value = formData.persona_id || '';
+            document.getElementById('journey_stage').value = formData.journey_stage || '';
+        } catch (e) {
+            console.error('Error restoring draft:', e);
+        }
+    }
+});
+
+// Clear draft when form is successfully submitted
+document.querySelector('form').addEventListener('submit', function() {
+    localStorage.removeItem('draftInsight');
+});
+</script>
+
 {% endblock %}
