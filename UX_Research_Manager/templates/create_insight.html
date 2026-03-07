@@ -23,6 +23,10 @@
                 <option value="{{ persona.id }}">{{ persona.name }}</option>
                 {% endfor %}
             </select>
+            {% if personas|length == 0 %}
+            <p style="margin-top: 0.5rem; color: #666;">No personas yet. Create one first to link it to this insight.</p>
+            {% endif %}
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/personas/new'" style="margin-top: 0.5rem;">+ Create Persona</button>
         </div>
         
         <div class="form-group">
