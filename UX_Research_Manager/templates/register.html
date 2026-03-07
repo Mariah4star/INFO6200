@@ -12,13 +12,24 @@
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
-                <small style="color: #666;">Use at least 8 characters.</small>
+                <input type="password" id="password" name="password" required minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}" title="Use at least 8 characters with one uppercase letter, one lowercase letter, and one number." autocomplete="new-password" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
+                <small style="color: #666;">Use at least 8 characters with one uppercase letter, one lowercase letter, and one number.</small>
             </div>
 
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required minlength="8" autocomplete="new-password" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
+                <input type="password" id="confirm_password" name="confirm_password" required minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}" title="Use at least 8 characters with one uppercase letter, one lowercase letter, and one number." autocomplete="new-password" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
+            </div>
+
+            <div class="form-group">
+                <label for="security_phrase">Security Phrase</label>
+                <input type="text" id="security_phrase" name="security_phrase" required minlength="4" autocomplete="off" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
+                <small style="color: #666;">You will use this phrase to reset your password if you forget it.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_security_phrase">Confirm Security Phrase</label>
+                <input type="text" id="confirm_security_phrase" name="confirm_security_phrase" required minlength="4" autocomplete="off" style="width: 100%; padding: 0.5rem; border: 1px solid var(--soft-blue); border-radius: 4px;">
             </div>
 
             <button type="submit" class="btn btn-success">Register</button>

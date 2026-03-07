@@ -20,6 +20,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
+    security_phrase_hash = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     personas = db.relationship('Persona', backref='owner', lazy=True, cascade='all, delete-orphan')
@@ -32,6 +33,16 @@ class User(db.Model):
     def check_password(self, password: str) -> bool:
         """Validate a password against the stored hash."""
         return check_password_hash(self.password_hash, password)
+
+    def set_security_phrase(self, phrase: str) -> None:
+        """Hash and store a security phrase securely."""
+        self.security_phrase_hash = generate_password_hash(phrase)
+
+    def check_security_phrase(self, phrase: str) -> bool:
+        """Validate a security phrase against the stored hash."""
+        if not self.security_phrase_hash:
+            return False
+        return check_password_hash(self.security_phrase_hash, phrase)
 
     def to_dict(self):
         return {

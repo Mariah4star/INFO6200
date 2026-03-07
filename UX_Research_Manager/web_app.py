@@ -5,6 +5,7 @@ Adds secure user authentication, session management, and per-user data ownership
 """
 
 import os
+import re
 from functools import wraps
 
 from flask import Flask, render_template, request, jsonify, url_for, redirect, session, flash
@@ -48,8 +49,12 @@ def ensure_auth_schema() -> None:
     if 'users' not in table_names:
         User.__table__.create(db.engine, checkfirst=True)
 
+    user_columns = {col['name'] for col in inspector.get_columns('users')} if 'users' in table_names else set()
     persona_columns = {col['name'] for col in inspector.get_columns('personas')} if 'personas' in table_names else set()
     insight_columns = {col['name'] for col in inspector.get_columns('insights')} if 'insights' in table_names else set()
+
+    if 'users' in table_names and 'security_phrase_hash' not in user_columns:
+        db.session.execute(text('ALTER TABLE users ADD COLUMN security_phrase_hash VARCHAR(255)'))
 
     if 'personas' in table_names and 'user_id' not in persona_columns:
         db.session.execute(text('ALTER TABLE personas ADD COLUMN user_id INTEGER'))
@@ -74,6 +79,19 @@ def get_current_user():
     if not user_id:
         return None
     return User.query.get(user_id)
+
+
+def is_strong_password(password: str) -> bool:
+    """Require at least 8 chars, one uppercase, one lowercase, and one number."""
+    if len(password) < 8:
+        return False
+    if not re.search(r'[A-Z]', password):
+        return False
+    if not re.search(r'[a-z]', password):
+        return False
+    if not re.search(r'\d', password):
+        return False
+    return True
 
 
 def login_required(view_func):
@@ -104,17 +122,27 @@ def register():
         email = (request.form.get('email') or '').strip().lower()
         password = request.form.get('password') or ''
         confirm_password = request.form.get('confirm_password') or ''
+        security_phrase = (request.form.get('security_phrase') or '').strip()
+        confirm_security_phrase = (request.form.get('confirm_security_phrase') or '').strip()
 
         if not email or '@' not in email:
             flash('Please enter a valid email address.', 'error')
             return render_template('register.html')
 
-        if len(password) < 8:
-            flash('Password must be at least 8 characters.', 'error')
+        if not is_strong_password(password):
+            flash('Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one number.', 'error')
             return render_template('register.html')
 
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
+            return render_template('register.html')
+
+        if len(security_phrase) < 4:
+            flash('Security phrase must be at least 4 characters.', 'error')
+            return render_template('register.html')
+
+        if security_phrase != confirm_security_phrase:
+            flash('Security phrases do not match.', 'error')
             return render_template('register.html')
 
         existing_user = User.query.filter_by(email=email).first()
@@ -125,6 +153,7 @@ def register():
         try:
             user = User(email=email)
             user.set_password(password)
+            user.set_security_phrase(security_phrase)
             db.session.add(user)
             db.session.commit()
             flash('Registration successful. Please log in.', 'success')
@@ -161,10 +190,10 @@ def login():
 
 @app.route('/change-password', methods=['GET', 'POST'])
 def change_password():
-    """Allow a user to change their password from the login flow."""
+    """Reset a forgotten password from the login flow."""
     if request.method == 'POST':
         email = (request.form.get('email') or '').strip().lower()
-        current_password = request.form.get('current_password') or ''
+        security_phrase = (request.form.get('security_phrase') or '').strip()
         new_password = request.form.get('new_password') or ''
         confirm_password = request.form.get('confirm_password') or ''
 
@@ -172,8 +201,8 @@ def change_password():
             flash('Please enter a valid email address.', 'error')
             return render_template('change_password.html')
 
-        if len(new_password) < 8:
-            flash('New password must be at least 8 characters.', 'error')
+        if not is_strong_password(new_password):
+            flash('New password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one number.', 'error')
             return render_template('change_password.html')
 
         if new_password != confirm_password:
@@ -181,8 +210,12 @@ def change_password():
             return render_template('change_password.html')
 
         user = User.query.filter_by(email=email).first()
-        if not user or not user.check_password(current_password):
-            flash('Invalid email or current password.', 'error')
+        if not user:
+            flash('No account found for that email.', 'error')
+            return render_template('change_password.html')
+
+        if not user.check_security_phrase(security_phrase):
+            flash('Invalid security phrase.', 'error')
             return render_template('change_password.html')
 
         try:
