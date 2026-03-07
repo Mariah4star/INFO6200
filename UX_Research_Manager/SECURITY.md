@@ -48,7 +48,7 @@ Implemented now:
 - Session-based auth checks
 - Per-user ownership enforcement on CRUD and summarize endpoints
 
-Recommended next hardening steps:
+# Recommended next hardening steps:
 - CSRF tokens for all forms
 - Password complexity checks and reset flow
 - Account lockout / throttling
