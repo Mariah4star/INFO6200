@@ -42,6 +42,23 @@ nav a:hover {
     background-color: var(--medium-blue);
 }
 
+nav button {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+nav button:hover {
+    background-color: var(--medium-blue);
+}
+
 /* Main Container */
 .container {
     max-width: 1200px;

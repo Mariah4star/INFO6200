@@ -394,7 +394,8 @@ def create_insight():
 @login_required
 def new_persona():
     """Show form to create new persona."""
-    return render_template('create_persona.html')
+    next_url = request.args.get('next', '')
+    return render_template('create_persona.html', next_url=next_url)
 
 
 @app.route('/personas', methods=['POST'])
@@ -404,6 +405,7 @@ def create_persona():
     try:
         name = (request.form.get('name') or '').strip()
         description = (request.form.get('description') or '').strip()
+        next_url = request.form.get('next', '').strip()
 
         if not name or not description:
             return 'Name and description are required.', 400
@@ -417,6 +419,9 @@ def create_persona():
         db.session.add(new_persona_record)
         db.session.commit()
 
+        # Redirect back to the page they came from, or default to personas list
+        if next_url and next_url.startswith('/'):
+            return redirect(next_url)
         return redirect(url_for('personas'))
     except Exception as e:
         db.session.rollback()

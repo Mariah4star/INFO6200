@@ -30,7 +30,7 @@
             {% if current_user %}
             <li>
                 <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
-                    <button type="submit" style="background: transparent; border: none; color: white; cursor: pointer; padding: 0.5rem 1rem;">Logout</button>
+                    <button type="submit">Logout</button>
                 </form>
             </li>
             {% else %}
