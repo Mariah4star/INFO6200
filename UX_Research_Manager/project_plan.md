@@ -195,5 +195,26 @@ Make sure that full CRUD functionality for insights and personas through the web
 - web_app.py file 
 - Updated templates for edit forms and delete actions
 
+## Chunk 8: Program Security
+
+# Goal: 
+Implement a secure user authentication system that allows users to register, log in, and manage their own data. Make sure that passwords are securely hashed, user sessions are managed properly, and only authenticated users can access or modify the data they created.
+
+# Tasks: 
+1. Create a user model in the database with a securely hashed password.
+2. Update existing data models to include a foreign key relationship to the User model to establish ownership of insights and personas.
+3. Implement registration, login, and logout functionality using Flask sessions.
+4. Protect all data routes so only authenticated users can access them and ensure users can only view or modify their own data.
+
+# Additional Information: 
+- Make sure that password hashing is implemented for secure storage of credentials.
+- Validate user input and manage user sessions to maintain application security.
+
+# Core Files:
+- Updated web_app.py file 
+- A security document showing how users’ data is protected
+- Updated database models with the User model and ownership relationships
+- Updated templates, including login and registration pages
+
 
 
