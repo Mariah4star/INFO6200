@@ -159,6 +159,44 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    """Allow a user to change their password from the login flow."""
+    if request.method == 'POST':
+        email = (request.form.get('email') or '').strip().lower()
+        current_password = request.form.get('current_password') or ''
+        new_password = request.form.get('new_password') or ''
+        confirm_password = request.form.get('confirm_password') or ''
+
+        if not email or '@' not in email:
+            flash('Please enter a valid email address.', 'error')
+            return render_template('change_password.html')
+
+        if len(new_password) < 8:
+            flash('New password must be at least 8 characters.', 'error')
+            return render_template('change_password.html')
+
+        if new_password != confirm_password:
+            flash('New passwords do not match.', 'error')
+            return render_template('change_password.html')
+
+        user = User.query.filter_by(email=email).first()
+        if not user or not user.check_password(current_password):
+            flash('Invalid email or current password.', 'error')
+            return render_template('change_password.html')
+
+        try:
+            user.set_password(new_password)
+            db.session.commit()
+            flash('Password updated successfully. Please log in.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating password: {str(e)}', 'error')
+
+    return render_template('change_password.html')
+
+
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
