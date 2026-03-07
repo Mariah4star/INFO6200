@@ -53,3 +53,12 @@ Implemented now:
 - Password complexity checks and reset flow
 - Account lockout / throttling
 - Audit logging
+
+# A test admin login in your database.
+
+Use these credentials:
+- Email: admin@uxrm.local
+- Password: Admin123!
+
+
+
