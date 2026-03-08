@@ -216,5 +216,25 @@ Implement a secure user authentication system that allows users to register, log
 - Updated database models with the User model and ownership relationships
 - Updated templates, including login and registration pages
 
+## Chunk 9: API
+
+# Goal: 
+I want to make this application’s data available to other programs by building an API (RESTful API, unless you think there is a better option).
+
+# Tasks: 
+1. Enable HTTPS
+2. Add an API component to the existing FLASK application with endpoints grouped under a prefix (/api/v1/).
+3. Create an endpoint that returns a JSON list of all items for the authenticated user.
+4. Create a dynamic endpoint that returns a single specific item
+5. Protect all endpoints 
+6. All item endpoints should return only the authenticated user’s items
+7. If a requested item isn’t found or doesn’t exist, the API should return the appropriate HTTP status code.
+
+# Files to create:
+- New API files
+- Update existing files to accommodate the new API
+
+# Additional Information: 
+My goal here is to use the API to deploy a version of this program to Heroku. 
 
 
