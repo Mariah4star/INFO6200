@@ -499,6 +499,94 @@ def create_persona():
         return f'Error creating persona: {str(e)}', 400
 
 
+# ============================================================================
+# API ENDPOINTS (Chunk 9) - RESTful API under /api/v1/
+# ============================================================================
+
+@app.route('/api/v1/insights', methods=['GET'])
+@login_required
+def api_get_insights():
+    """API: Return JSON list of all insights for the authenticated user."""
+    try:
+        user_id = current_user_id()
+        insights_list = Insight.query.filter_by(user_id=user_id).order_by(Insight.timestamp.desc()).all()
+        return jsonify({
+            'success': True,
+            'count': len(insights_list),
+            'insights': [insight.to_dict() for insight in insights_list]
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/v1/insights/<int:insight_id>', methods=['GET'])
+@login_required
+def api_get_insight(insight_id):
+    """API: Return a single specific insight for the authenticated user."""
+    try:
+        user_id = current_user_id()
+        insight = Insight.query.filter_by(id=insight_id, user_id=user_id).first()
+        
+        if not insight:
+            return jsonify({'success': False, 'message': 'Insight not found'}), 404
+        
+        return jsonify({
+            'success': True,
+            'insight': insight.to_dict()
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/v1/personas', methods=['GET'])
+@login_required
+def api_get_personas():
+    """API: Return JSON list of all personas for the authenticated user."""
+    try:
+        user_id = current_user_id()
+        personas_list = Persona.query.filter_by(user_id=user_id).order_by(Persona.timestamp.desc()).all()
+        return jsonify({
+            'success': True,
+            'count': len(personas_list),
+            'personas': [persona.to_dict() for persona in personas_list]
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/v1/personas/<int:persona_id>', methods=['GET'])
+@login_required
+def api_get_persona(persona_id):
+    """API: Return a single specific persona for the authenticated user."""
+    try:
+        user_id = current_user_id()
+        persona = Persona.query.filter_by(id=persona_id, user_id=user_id).first()
+        
+        if not persona:
+            return jsonify({'success': False, 'message': 'Persona not found'}), 404
+        
+        return jsonify({
+            'success': True,
+            'persona': persona.to_dict()
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/v1/status', methods=['GET'])
+def api_status():
+    """API: Public health check endpoint."""
+    return jsonify({
+        'success': True,
+        'message': 'UX Research Manager API is running',
+        'version': 'v1'
+    }), 200
+
+
+# ============================================================================
+# Legacy API endpoint (kept for backward compatibility)
+# ============================================================================
+
 @app.route('/api/insights/<insight_id>/summarize', methods=['POST'])
 @login_required
 def summarize_insight_api(insight_id):
