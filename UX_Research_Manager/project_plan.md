@@ -237,4 +237,26 @@ I want to make this application’s data available to other programs by building
 # Additional Information: 
 My goal here is to use the API to deploy a version of this program to Heroku. 
 
+# Chunk 10: Hardening for Production
 
+# Goal: 
+Prepare the UX Research Manager app for production deployment by adopting professional practices, including dependency management, secure configuration, proper source control hygiene, and WSGI compatibility.
+
+# Tasks:
+Tasks: 
+1. Update ‘requirements.txt` listing all external dependencies with pinned versions.
+2. Load all configuration variables from the environment variables.
+3. Remove hard-coded secrets.
+4. Add a ‘.env.example’ file documenting required variables. 
+5. Updated .gitignore file to make sure that it excludes .env, database files (*.db), `__pycache__/`, and `.pytest_cache/`.
+6. Make sure that the app runs via a WSGI server (e.g., Gunicorn) and is ready for deployment to Heroku.
+7. Disable Flask debug mode for production
+
+# Complete files ready for deployment:
+- Source code (web_app.py, models, templates, etc.) 
+- requirements.txt
+- .env.example
+- .gitignore
+
+# Additional Information: 
+My goal is to deploy the API-enabled version of this app to Heroku securely and professionally.
