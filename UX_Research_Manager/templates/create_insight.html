@@ -58,13 +58,15 @@ function saveFormAndCreatePersona() {
         journey_stage: document.getElementById('journey_stage').value
     };
     localStorage.setItem('draftInsight', JSON.stringify(formData));
-    window.location.href = '/personas/new?next=/insights/new';
+    window.location.href = '/personas/new?next=' + encodeURIComponent('/insights/new?restore=1');
 }
 
 // Restore form data when page loads
 window.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    const shouldRestore = params.get('restore') === '1';
     const draft = localStorage.getItem('draftInsight');
-    if (draft) {
+    if (draft && shouldRestore) {
         try {
             const formData = JSON.parse(draft);
             document.getElementById('title').value = formData.title || '';
@@ -74,6 +76,8 @@ window.addEventListener('DOMContentLoaded', function() {
         } catch (e) {
             console.error('Error restoring draft:', e);
         }
+    } else {
+        localStorage.removeItem('draftInsight');
     }
 });
 
