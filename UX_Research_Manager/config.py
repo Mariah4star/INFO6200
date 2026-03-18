@@ -60,8 +60,12 @@ def get_database_url():
 
 
 class Config:
-    """Flask configuration for database."""
-    
+    """Flask configuration loaded from environment variables."""
+
+    SECRET_KEY = os.getenv('FLASK_SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = get_database_url()
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False  # Set to True for SQL debugging
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', 'false').lower() == 'true'
+    SQLALCHEMY_ECHO = os.getenv('SQLALCHEMY_ECHO', 'false').lower() == 'true'
+    FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+    HOST = os.getenv('HOST', '0.0.0.0')
+    PORT = int(os.getenv('PORT', '8000'))

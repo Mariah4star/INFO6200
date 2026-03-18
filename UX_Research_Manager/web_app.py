@@ -4,7 +4,6 @@ UX Research Manager - Program Security (Chunk 8)
 Adds secure user authentication, session management, and per-user data ownership.
 """
 
-import os
 import re
 from functools import wraps
 
@@ -25,8 +24,10 @@ app = Flask(
 
 # Configure database and session secret
 app.config.from_object(Config)
-app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'dev-secret-change-me')
 db.init_app(app)
+
+if not app.config.get('SECRET_KEY'):
+    raise RuntimeError('FLASK_SECRET_KEY is required. Set it in environment variables or .env.')
 
 
 # Aquatic Color Palette
@@ -607,4 +608,8 @@ def summarize_insight_api(insight_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(
+        debug=app.config.get('FLASK_DEBUG', False),
+        host=app.config.get('HOST', '0.0.0.0'),
+        port=app.config.get('PORT', 8000)
+    )
