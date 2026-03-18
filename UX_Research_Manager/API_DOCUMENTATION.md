@@ -340,6 +340,24 @@ heroku run python -c "from web_app import app, db; app.app_context().push(); db.
 heroku logs --tail
 ```
 
+### Production Deployment Checklist (Chunk 10)
+- `requirements.txt` has pinned dependency versions.
+- `Procfile` exists with `web: gunicorn web_app:app`.
+- `runtime.txt` exists and pins a Heroku-supported Python version.
+- `.env.example` documents all required environment variables.
+- `.gitignore` excludes `.env`, `*.db`, `__pycache__/`, and `.pytest_cache/`.
+- `FLASK_SECRET_KEY` is set in Heroku Config Vars (never hard-coded).
+- `FLASK_DEBUG` remains `false` in production.
+- `DATABASE_URL` is configured by Heroku Postgres add-on.
+- App is accessible over HTTPS (`https://...herokuapp.com`).
+
+Quick verify after deploy:
+```bash
+heroku config
+heroku logs --tail
+curl -I https://your-app-name.herokuapp.com/api/v1/status
+```
+
 ## Future Enhancements
 
 Potential additions for future API versions:
@@ -378,5 +396,5 @@ For issues or questions:
 
 ---
 
-**Version:** 1.0 (Chunk 9)  
-**Last Updated:** March 7, 2026
+**Version:** 1.1 (Chunk 10 hardening notes added)  
+**Last Updated:** March 18, 2026
