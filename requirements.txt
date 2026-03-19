@@ -1,0 +1,1 @@
+-r UX_Research_Manager/requirements.txt
