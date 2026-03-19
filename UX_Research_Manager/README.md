@@ -58,7 +58,7 @@ curl https://your-app-name.herokuapp.com/api/v1/status
 ## Deployment Notes
 
 - WSGI server is configured via `Procfile`: `web: gunicorn web_app:app`
-- Python runtime is pinned in `runtime.txt`
+- Python runtime is pinned in `.python-version` (repo root)
 - Secrets are environment-driven (do not hard-code)
 - HTTPS is provided by Heroku automatically
 
@@ -73,4 +73,4 @@ curl https://your-app-name.herokuapp.com/api/v1/status
 - Database connection issues on Heroku:
 	- Verify Postgres add-on is attached and `DATABASE_URL` exists in `heroku config`.
 - Static/runtime boot issues after deploy:
-	- Confirm `Procfile` is present, `gunicorn` is in `requirements.txt`, and Python version in `runtime.txt` is supported.
+	- Confirm `Procfile` is present, `gunicorn` is in `requirements.txt`, and Python version in `.python-version` is supported.

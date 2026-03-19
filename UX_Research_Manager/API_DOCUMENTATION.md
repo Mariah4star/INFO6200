@@ -343,7 +343,7 @@ heroku logs --tail
 ### Production Deployment Checklist (Chunk 10)
 - `requirements.txt` has pinned dependency versions.
 - `Procfile` exists with `web: gunicorn web_app:app`.
-- `runtime.txt` exists and pins a Heroku-supported Python version.
+- `.python-version` exists at repo root and pins a Heroku-supported Python major version.
 - `.env.example` documents all required environment variables.
 - `.gitignore` excludes `.env`, `*.db`, `__pycache__/`, and `.pytest_cache/`.
 - `FLASK_SECRET_KEY` is set in Heroku Config Vars (never hard-coded).
